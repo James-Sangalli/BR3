@@ -1,0 +1,40 @@
+{
+  "name": "bitreturn(BR3)",
+  "version": "3.0.0",
+  "main": "index.js",
+  "scripts": {
+    "knex-build": "knex migrate:rollback && knex migrate:latest && knex seed:run",
+    "build":"browserify js/search.js > js/searchBundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/James-Sangalli/BR3.git"
+  },
+  "keywords": [
+    "Bitcoin",
+    "JavaScript",
+    "Donations"
+  ],
+  "author": "James Sangalli",
+  "bugs": {
+    "url": "https://github.com/James-Sangalli/BR3/issues"
+  },
+  "homepage": "https://github.com/James-Sangalli/BR3#readme",
+  "dependencies": {
+    "bitcoinjs-lib": "^2.2.0",
+    "body-parser": "^1.15.1",
+    "browserify": "^13.0.0",
+    "dotenv": "^2.0.0",
+    "express": "^4.13.4",
+    "knex": "^0.10.0",
+    "mandrill": "^0.1.0",
+    "node-mandrill": "^1.0.1",
+    "superagent": "^1.8.3"
+  },
+  "devDependencies": {
+    "sqlite3": "^3.1.1",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.5.1",
+    "watchify": "^3.7.0"
+  }
+}
