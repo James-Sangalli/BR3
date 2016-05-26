@@ -2,12 +2,14 @@ var express = require('express')
 var app = express()
 var config = require('./knex/knexfile.js')
 var env = process.env.NODE_ENV || 'development'
+var dotenv = require("dotenv")
 var knex = require('knex')(config[env])
 var bodyParser = require('body-parser')
 var request = require("superagent")
 var port = 3000
 var time = 10000 //10 seconds
 var year = new Date().getFullYear()
+var password = process.env.password
 
 var path = require("path")
 app.set('views', path.join(__dirname, 'views'));
@@ -43,7 +45,7 @@ function scanBlockchain(addresses){
   for(address of addresses){
     var query = "http://btc.blockr.io/api/v1/address/txs/" + address.charityAddress
     request.get(query, (req,res) => {
-      res.header( 'Access-Control-Allow-Origin','*' );
+      // res.header( 'Access-Control-Allow-Origin','*' );
       console.log("here is the response from the api: ", req)
       if(res.body.time_utc.substring(0,3) > year - 5){
         //only selects donations that were done less than 5 years ago
@@ -60,7 +62,7 @@ function scanBlockchain(addresses){
 
 function getDonor(dataObj){
   var query = "https://blockchain.info/rawtx/"+data.tx+"/$tx_hash"
-  res.header( 'Access-Control-Allow-Origin','*' );
+  // res.header( 'Access-Control-Allow-Origin','*' );
   request.get(query,(err,data) => {
     console.log("here is the tx data from blockchain.info: ", data)
     var donor = data.body.inputs[0].prev_out.addr
@@ -98,10 +100,8 @@ function payout(value,address){
 
     res.header( 'Access-Control-Allow-Origin','*' );
     var query = "http://localhost:3000/merchant/$guid/payment?password=$" +
-    + req.body.password + "&to=$" + req.body.to + "&" +
-    "amount=$" + req.body.amount + "&from=$" + "&note=$" + "BitReturn tax rebate from BitReturn.com"
-
-    res.header( 'Access-Control-Allow-Origin','*' );
+    + password + "&to=$" + address + "&" +
+    "amount=$" + value + "&from=$" + "&note=$" + "BitReturn tax rebate from BitReturn.com"
 
     request.get(query,(err,data) => {
       console.log("here's the data I got from the API", data.text)
@@ -130,7 +130,6 @@ function addPaymentToDB(value,address,charity,tx){
 }
 
 app.post("/search/:searchTerm",(req,res) => {
-
   res.header( 'Access-Control-Allow-Origin','*' );
   var searchTerm = req.params.searchTerm
   knex('approvedCharitiesTable').select().where("charityAddress","like","%" + searchTerm + "%")
