@@ -1,0 +1,31 @@
+-Add login for admin
+
+-must be under 5 years
+
+-must keep track of where the search left off
+
+-must uniquely constrain donations (one payout per donation and no more)
+
+-black list extra feature??
+
+-cycle through records and check each
+
+-value must be positive and not negative (input not output)
+
+-use http://btc.blockr.io/api/v1/address/txs/198aMn6ZYAczwrE5NvNTUMyJ5qkfy4g3Hi,1L8meqhMTRpxasdGt8DHSJfscxgHHzvPgk
+
+-loop through each approved charity and append the address to the url, then check it. cycle can be performed manually or with a timeout
+
+
+var count = 0;
+
+// function numberOfCharities(){
+//   knex("approvedCharitiesTable").select()
+//   .then((data) => {
+//     console.log("got the number of charities: ", data.length)
+//     findCharities(data.length)
+//   })
+//   .catch((err) => {
+//     if (err) throw err
+//   })
+// }
