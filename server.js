@@ -72,8 +72,8 @@ function getDonor(dataObj){
   var query = "https://blockchain.info/rawtx/"+dataObj.tx+"/$tx_hash"
   request.get(query,(err,data) => {
     console.log("here is the tx data from blockchain.info: ", data.body)
-    // var donor = data.body
-    // payTo(dataObj,donor)
+    var donor = data.body.inputs[0].prev_out.addr
+    payTo(dataObj,donor)
   })
 }
 
