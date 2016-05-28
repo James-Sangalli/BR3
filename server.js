@@ -51,34 +51,34 @@ function scanBlockchain(addresses){
   for(address of addresses){
     var query = "http://btc.blockr.io/api/v1/address/txs/" + address.charityAddress
     request.get(query, (req,res) => {
-      console.log("here is the response from the api: ", res.body.data.txs[0])
-      // var data = JSON.stringify(res.body, null, 4);
-      // console.log(data)
-      // if(res.body.time_utc.substring(0,3) > year - 5){
-      //   //only selects donations that were done less than 5 years ago
-      //   var dataObj = {
-      //     value: res.body.data.value,
-      //     charity:address.charityAddress,
-      //     tx:res.body.data.tx
-      //   }
-      //   getDonor(data)
-      // }
+      var length = res.body.data.txs.length
+      for(i=0;i<length;i++){
+        var transaction = res.body.data.txs[i]
+        if(transaction.time_utc.substring(0,4) > year - 5){
+          //only selects donations that were done less than 5 years ago
+          var dataObj = {
+            value: transaction.amount,
+            charity:address.charityAddress,
+            tx:transaction.tx
+          }
+          getDonor(dataObj)
+        }
+      }
     })
   }
 }
 
 function getDonor(dataObj){
-  var query = "https://blockchain.info/rawtx/"+data.tx+"/$tx_hash"
-  // res.header( 'Access-Control-Allow-Origin','*' );
+  var query = "https://blockchain.info/rawtx/"+dataObj.tx+"/$tx_hash"
   request.get(query,(err,data) => {
-    console.log("here is the tx data from blockchain.info: ", data)
-    var donor = data.body.inputs[0].prev_out.addr
-    payTo(dataObj,donor)
+    console.log("here is the tx data from blockchain.info: ", data.body)
+    // var donor = data.body
+    // payTo(dataObj,donor)
   })
 }
 
 function payTo(dataObj,donor){
-  if(value > 0){
+  if(dataObj.value > 0){
     //values that are spent are negative, we only want to take in donations or positive values
     knex("payment").select().where("tx",dataObj.tx)
     .then((data) => {
