@@ -5,11 +5,12 @@ var env = process.env.NODE_ENV || 'development'
 var dotenv = require("dotenv")
 var knex = require('knex')(config[env])
 var bodyParser = require('body-parser')
-var request = require("superagent")
 var port = 3000
-var time = 10000 //10 seconds
+var time = 1000 //1 second
 var year = new Date().getFullYear()
 var password = process.env.password
+var price
+var request = require('superagent')
 
 var path = require("path")
 app.set('views', path.join(__dirname, 'views'));
@@ -21,6 +22,11 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.listen(port,  () => {
   console.log('listening on port ', port);
 });
+
+request.get("https://blockchain.info/ticker",(err,data) => {
+  price = data.body.NZD.buy
+  console.log("Today's bitcoin price: $NZD", data.body.NZD.buy)
+})
 
 setTimeout(function(){
   findCharities() //checks every time set interval
@@ -45,17 +51,18 @@ function scanBlockchain(addresses){
   for(address of addresses){
     var query = "http://btc.blockr.io/api/v1/address/txs/" + address.charityAddress
     request.get(query, (req,res) => {
-      // res.header( 'Access-Control-Allow-Origin','*' );
-      console.log("here is the response from the api: ", req)
-      if(res.body.time_utc.substring(0,3) > year - 5){
-        //only selects donations that were done less than 5 years ago
-        var dataObj = {
-          value: res.body.value,
-          charity:address.charityAddress,
-          tx:res.body.tx
-        }
-        getDonor(data)
-      }
+      console.log("here is the response from the api: ", res.body.data.txs[0])
+      // var data = JSON.stringify(res.body, null, 4);
+      // console.log(data)
+      // if(res.body.time_utc.substring(0,3) > year - 5){
+      //   //only selects donations that were done less than 5 years ago
+      //   var dataObj = {
+      //     value: res.body.data.value,
+      //     charity:address.charityAddress,
+      //     tx:res.body.data.tx
+      //   }
+      //   getDonor(data)
+      // }
     })
   }
 }
@@ -103,7 +110,7 @@ function payout(value,address){
     + password + "&to=$" + address + "&" +
     "amount=$" + value + "&from=$" + "&note=$" + "BitReturn tax rebate from BitReturn.com"
 
-    request.get(query,(err,data) => {
+    app.get(query,(err,data) => {
       console.log("here's the data I got from the API", data.text)
       console.log("payment made!")
       res.send(data)

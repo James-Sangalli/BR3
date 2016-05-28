@@ -1,5 +1,7 @@
 -Add login for admin
 
+-must be over $5 (use blockchain.info price api)
+
 -must be under 5 years
 
 -must keep track of where the search left off
