@@ -69,10 +69,9 @@ function scanBlockchain(addresses){
 }
 
 function getDonor(dataObj){
-  var query = "https://blockchain.info/rawtx/"+dataObj.tx+"/$tx_hash"
+  var query = "http://btc.blockr.io/api/v1/tx/info/"+dataObj.tx;
   request.get(query,(err,data) => {
-    console.log("here is the tx data from blockchain.info: ", data.body)
-    var donor = data.body.inputs[0].prev_out.addr
+    var donor = data.body.data.vins[0].address
     payTo(dataObj,donor)
   })
 }
@@ -86,6 +85,7 @@ function payTo(dataObj,donor){
         console.log("payment already made")
       }
       else{
+        console.log("Paying out to donor: ", donor)
         payout(dataObj.value,donor)
         addPaymentToDB(dataObj.value,donor,dataObj.charity,dataObj.tx)
       }
