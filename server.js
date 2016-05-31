@@ -61,7 +61,12 @@ function scanBlockchain(addresses){
             charity:address.charityAddress,
             tx:transaction.tx
           }
-          getDonor(dataObj)
+          if(dataObj.value > 0){
+            getDonor(dataObj)
+          }
+          else{
+            console.log("this is a spend not a donation")
+          }
         }
       }
     })
@@ -98,9 +103,6 @@ function payTo(dataObj,donor){
         throw err
       }
     })
-  }
-  else{
-    console.log("Not counted as this was a spent not a donation")
   }
 }
 
