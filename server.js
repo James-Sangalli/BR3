@@ -5,16 +5,10 @@ var env = process.env.NODE_ENV || 'development'
 var dotenv = require("dotenv")
 var knex = require('knex')(config[env])
 var bodyParser = require('body-parser')
-var port = 3000
-var time = 1000 //1 second
 var year = new Date().getFullYear()
 var password = process.env.password
-var price
 var request = require('superagent')
 
-var path = require("path")
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
 app.use(express.static(__dirname));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -24,19 +18,18 @@ app.listen(port,  () => {
 });
 
 request.get("https://blockchain.info/ticker",(err,data) => {
-  price = data.body.NZD.buy
   console.log("Today's bitcoin price: $NZD", data.body.NZD.buy)
 })
 
-setTimeout(function(){
-  findCharities() //checks every time set interval
-}, time);
+findCharities() //starts of the process
 
+setTimeout(() => {
+  findCharities()
+}, 61000); //checks every minute and 1 second
 
 function findCharities(){
   knex("approvedCharitiesTable").select("charityAddress")
   .then((data) => {
-    console.log("Send to scanBlockchain()")
     scanBlockchain(data)
   })
   .catch((err) => {
@@ -47,34 +40,29 @@ function findCharities(){
   })
 }
 
-var once = true;
-
-function scanBlockchain(addresses){
+function scanBlockchain (addresses) {
   for(address of addresses){
-    if(once){
-      once = false
-      var query = "http://btc.blockr.io/api/v1/address/txs/" + address.charityAddress
-      request.get(query, (req,res) => {
-        var length = res.body.data.txs.length
-        for(i=0;i<length;i++){
-          var transaction = res.body.data.txs[i]
-          if(transaction.time_utc.substring(0,4) > year - 5){
-            //only selects donations that were done less than 5 years ago
-            var dataObj = {
-              value: transaction.amount,
-              charity:address.charityAddress,
-              tx:transaction.tx
-            }
-            if(dataObj.value > 0){
-              getDonor(dataObj)
-            }
-            else{
-              console.log("this is a spend not a donation")
-            }
+    var query = "http://btc.blockr.io/api/v1/address/txs/" + address.charityAddress
+    request.get(query, (req,res) => {
+      var length = res.body.data.txs.length
+      for(i=0;i<length;i++){
+        var transaction = res.body.data.txs[i]
+        if(transaction.time_utc.substring(0,4) > year - 5){
+          //only selects donations that were done less than 5 years ago
+          var dataObj = {
+            value: transaction.amount,
+            charity:address.charityAddress,
+            tx:transaction.tx
+          }
+          if(dataObj.value > 0){
+            getDonor(dataObj)
+          }
+          else{
+            console.log("this is a spend not a donation")
           }
         }
-      })
-    }
+      }
+    })
   }
 }
 
@@ -82,57 +70,43 @@ function getDonor(dataObj){
   var query = "http://btc.blockr.io/api/v1/tx/info/"+dataObj.tx;
   request.get(query,(err,data) => {
     var donor = data.body.data.vins[0].address
-    console.log(donor)
     payTo(dataObj,donor)
   })
 }
 
 function payTo(dataObj,donor){
-  if(dataObj.value > 0){
-    console.log("donation found!", dataObj.tx)
-    //values that are spent are negative, we only want to take in donations or positive values
-    knex("payments").select().where("tx",dataObj.tx)
-    .then((data) => {
-      if(data){
-        console.log("Paying out to donor: ", donor)
-        payout(dataObj.value,donor)
-        addPaymentToDB(dataObj.value,donor,dataObj.charity,dataObj.tx)
-      }
-      else{
-        console.log(data) //assumes payout has already been made
-      }
-    })
-    .catch((err) => {
-      if (err.errno == 19) {
-        console.log("Payment already completed")
-      }
-      else{
-        throw err
-      }
-    })
-  }
+  console.log("donation found!", dataObj.tx)
+  //values that are spent are negative, we only want to take in donations or positive values
+  knex("payments").select().where("tx",dataObj.tx)
+  .then((data) => {
+    if(data){
+      console.log("Paying out to donor: ", donor)
+      payout(dataObj.value,donor)
+      addPaymentToDB(dataObj.value,donor,dataObj.charity,dataObj.tx)
+    }
+    else{
+      console.log(data) //assumes payout has already been made
+    }
+  })
+  .catch((err) => {
+    if (err.errno == 19) {
+      console.log("Payment already completed")
+    }
+    else{
+      throw err
+    }
+  })
 }
 
 function payout(value,address){
-  console.log("Made it to payout!")
+  var query = "http://localhost:3000/merchant/$guid/payment?password=$" +
+  + password + "&to=$" + address + "&" +
+  "amount=$" + value + "&from=$" + "&note=$" + "BitReturn tax rebate from BitReturn.com"
 
-  app.post("/payment",(req,res) => {
-    res.header( 'Access-Control-Allow-Origin','*' );
-    var query = "http://localhost:3000/merchant/$guid/payment?password=$" +
-    + password + "&to=$" + address + "&" +
-    "amount=$" + value + "&from=$" + "&note=$" + "BitReturn tax rebate from BitReturn.com"
-
-    app.get(query,(err,data) => {
-      console.log("here's the data I got from the API", data.text)
-      console.log("payment made!")
-      if(err){
-        console.log(err)
-        throw err
-      }
-      else{
-        res.send(data)
-      } 
-    })
+  app.post(query,(req,res) => {
+    res.header( 'Access-Control-Allow-Origin','*' )
+    console.log("Here is the data back from the server: ", res)
+    res.send("Payment completed!")
   })
 }
 
@@ -165,7 +139,7 @@ app.post("/search/:searchTerm",(req,res) => {
     console.log("Error! ",err)
   })
   // send to client
-  res.json(data.body)
+  res.send(data.body)
 })
 
 
