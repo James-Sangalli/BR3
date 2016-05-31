@@ -32,7 +32,6 @@ setTimeout(function(){
   findCharities() //checks every time set interval
 }, time);
 
-
 function findCharities(){
   knex("approvedCharitiesTable").select("charityAddress")
   .then((data) => {
@@ -47,34 +46,29 @@ function findCharities(){
   })
 }
 
-var once = true;
-
-function scanBlockchain(addresses){
+function scanBlockchain (addresses) {
   for(address of addresses){
-    if(once){
-      once = false
-      var query = "http://btc.blockr.io/api/v1/address/txs/" + address.charityAddress
-      request.get(query, (req,res) => {
-        var length = res.body.data.txs.length
-        for(i=0;i<length;i++){
-          var transaction = res.body.data.txs[i]
-          if(transaction.time_utc.substring(0,4) > year - 5){
-            //only selects donations that were done less than 5 years ago
-            var dataObj = {
-              value: transaction.amount,
-              charity:address.charityAddress,
-              tx:transaction.tx
-            }
-            if(dataObj.value > 0){
-              getDonor(dataObj)
-            }
-            else{
-              console.log("this is a spend not a donation")
-            }
+    var query = "http://btc.blockr.io/api/v1/address/txs/" + address.charityAddress
+    request.get(query, (req,res) => {
+      var length = res.body.data.txs.length
+      for(i=0;i<length;i++){
+        var transaction = res.body.data.txs[i]
+        if(transaction.time_utc.substring(0,4) > year - 5){
+          //only selects donations that were done less than 5 years ago
+          var dataObj = {
+            value: transaction.amount,
+            charity:address.charityAddress,
+            tx:transaction.tx
+          }
+          if(dataObj.value > 0){
+            getDonor(dataObj)
+          }
+          else{
+            console.log("this is a spend not a donation")
           }
         }
-      })
-    }
+      }
+    })
   }
 }
 
@@ -131,7 +125,7 @@ function payout(value,address){
       }
       else{
         res.send(data)
-      } 
+      }
     })
   })
 }
