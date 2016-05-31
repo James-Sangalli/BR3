@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "knex-build": "knex migrate:rollback && knex migrate:latest && knex seed:run",
+    "server": "cd knex && nodemon ../server.js",
     "build":"browserify js/search.js > js/searchBundle.js"
   },
   "repository": {
