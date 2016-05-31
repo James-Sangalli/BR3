@@ -86,7 +86,7 @@ function payTo(dataObj,donor){
   if(dataObj.value > 0){
     console.log("donation found!", dataObj.tx)
     //values that are spent are negative, we only want to take in donations or positive values
-    knex("payment").select().where("tx",dataObj.tx)
+    knex("payments").select().where("tx",dataObj.tx)
     .then((data) => {
       if(data){
         console.log(data)
