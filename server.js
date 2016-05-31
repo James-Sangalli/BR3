@@ -72,17 +72,19 @@ function getDonor(dataObj){
   var query = "http://btc.blockr.io/api/v1/tx/info/"+dataObj.tx;
   request.get(query,(err,data) => {
     var donor = data.body.data.vins[0].address
+    console.log(donor)
     payTo(dataObj,donor)
   })
 }
 
 function payTo(dataObj,donor){
   if(dataObj.value > 0){
+    console.log("donation found!", dataObj.tx)
     //values that are spent are negative, we only want to take in donations or positive values
     knex("payment").select().where("tx",dataObj.tx)
     .then((data) => {
       if(data){
-        console.log("payment already made")
+        console.log(data)
       }
       else{
         console.log("Paying out to donor: ", donor)
@@ -103,6 +105,7 @@ function payTo(dataObj,donor){
 }
 
 function payout(value,address){
+  "Made it to payout!"
   app.post("/payment",(req,res) => {
 
     res.header( 'Access-Control-Allow-Origin','*' );
