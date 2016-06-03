@@ -1,20 +1,21 @@
-var express = require('express')
-var app = express()
-var config = require('./knex/knexfile.js')
-var env = process.env.NODE_ENV || 'development'
-var dotenv = require("dotenv")
-var knex = require('knex')(config[env])
-var bodyParser = require('body-parser')
-var year = new Date().getFullYear()
-var password = process.env.password
-var request = require('superagent')
+var express = require('express'),
+    app = express(),
+    config = require('./knex/knexfile.js'),
+    env = process.env.NODE_ENV || 'development',
+    dotenv = require("dotenv"),
+    knex = require('knex')(config[env]),
+    bodyParser = require('body-parser'),
+    year = new Date().getFullYear(),
+    password = process.env.password,
+    db = require("./knex/db"),
+    request = require('superagent');
 
 app.use(express.static(__dirname));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.listen(port,  () => {
-  console.log('listening on port ', port);
+app.listen(3000,  () => {
+  console.log('listening on port ', 3000);
 });
 
 request.get("https://blockchain.info/ticker",(err,data) => {
@@ -28,7 +29,7 @@ setTimeout(() => {
 }, 61000); //checks every minute and 1 second
 
 function findCharities(){
-  knex("approvedCharitiesTable").select("charityAddress")
+  db.getCharities()
   .then((data) => {
     scanBlockchain(data)
   })
@@ -77,7 +78,7 @@ function getDonor(dataObj){
 function payTo(dataObj,donor){
   console.log("donation found!", dataObj.tx)
   //values that are spent are negative, we only want to take in donations or positive values
-  knex("payments").select().where("tx",dataObj.tx)
+  db.searchPayments(dataObj.tx)
   .then((data) => {
     if(data){
       console.log("Paying out to donor: ", donor)
@@ -111,11 +112,15 @@ function payout(value,address){
 }
 
 function addPaymentToDB(value,address,charity,tx){
-  knex("payments").insert({value:value,
+
+  var paymentObj = {
+    value:value,
     address:address,
     charity:charity,
     tx:tx
-  })
+  }
+
+  db.paymentDb(paymentObj)
   .then((data) => {
     console.log("Payment record added to DB, ID: ", data)
   })
@@ -131,7 +136,7 @@ function addPaymentToDB(value,address,charity,tx){
 app.post("/search/:searchTerm",(req,res) => {
   res.header( 'Access-Control-Allow-Origin','*' );
   var searchTerm = req.params.searchTerm
-  knex('approvedCharitiesTable').select().where("charityAddress","like","%" + searchTerm + "%")
+  db.search(searchTerm)
   .then((data) => {
     console.log("Sucess!!",data)
   })
