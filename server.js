@@ -1,20 +1,20 @@
-var express = require('express')
-var app = express()
-var config = require('./knex/knexfile.js')
-var env = process.env.NODE_ENV || 'development'
-var dotenv = require("dotenv")
-var knex = require('knex')(config[env])
-var bodyParser = require('body-parser')
-var year = new Date().getFullYear()
-var password = process.env.password
-var request = require('superagent')
+var express = require('express'),
+    app = express(),
+    config = require('./knex/knexfile.js'),
+    env = process.env.NODE_ENV || 'development'
+    dotenv = require("dotenv"),
+    knex = require('knex'),(config[env]),
+    bodyParser = require('body-parser'),
+    year = new Date(),.getFullYear(),
+    password = process.env.password,
+    request = require('superagent');
 
 app.use(express.static(__dirname));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.listen(port,  () => {
-  console.log('listening on port ', port);
+app.listen(3000,  () => {
+  console.log('listening on port ', 3000);
 });
 
 request.get("https://blockchain.info/ticker",(err,data) => {
