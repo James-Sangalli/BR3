@@ -1,30 +1,27 @@
 var test = require("tape")
-var app = require("../js/server.js")
+var app = require("../server")
 var request = require("superagent")
-var $ = require("jquery")
-var index = require("../js/index.js")
+var db = require("../knex/db")
 
-test('get /v1/latestdata returns an object with the property value time', function(t) {
+test('tests db functions', function(t) {
+  db.getCharities()
+  .then((data) => {
+      t.true(typeof data, Object, "returns a charity address object")
+      t.end()
+  })
+});
+
+var charities = {
+  first:"Sean's OutPost"
+}
+
+test('tests search function', function(t) {
   request(app)
-    .get('/v1/latestdata')
+    .get('/search/' + charities.first)
     .expect(200)
     .end(function(err, res) {
       t.false(err)
-      t.true(JSON.parse(res.body).hasOwnProperty('time'))
+      t.true(JSON.parse(res.body))
       t.end()
     })
-});
-
-test("tests index functions", function(t){
-
-  index.verifySig(address,signature,message,function(err,data){
-    t.true(data, "signature should be valid and return true")
-    t.end()
-  })
-
-  index.scriptToAddress(script,function(err,data){
-    t.equal(data.toString,"1HZwkjkeaoZfTSaJxDw6aKkxp45agDiEzN","should return the address 1HZwkjkeaoZfTSaJxDw6aKkxp45agDiEzN")
-    t.end()
-  })
-
 });
