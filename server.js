@@ -26,7 +26,7 @@ findCharities() //starts of the process
 
 setTimeout(() => {
   findCharities()
-}, 61000); //checks every minute and 1 second
+}, 600001); //checks every 10 minutes
 
 function findCharities(){
   db.getCharities()
@@ -138,13 +138,12 @@ app.post("/search/:searchTerm",(req,res) => {
   var searchTerm = req.params.searchTerm
   db.search(searchTerm)
   .then((data) => {
-    console.log("Sucess!!",data)
+    res.send(data.body)
   })
   .catch((err) => {
     console.log("Error! ",err)
+    if(err) throw err
   })
-  // send to client
-  res.send(data.body)
 })
 
 
