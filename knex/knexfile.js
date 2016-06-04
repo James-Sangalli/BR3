@@ -3,14 +3,14 @@ module.exports = {
   development: {
     client: 'sqlite3',
     connection: {
-      filename: './dev.sqlite3'
+      filename: './knex/dev.sqlite3'
     }
   },
 
   test: {
     client: 'sqlite3',
     connection: {
-      filename: '../Tests/test.sqlite3'
+      filename: './Tests/test.sqlite3'
     }
   },
 
