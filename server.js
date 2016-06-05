@@ -8,6 +8,7 @@ var express = require('express'),
     year = new Date().getFullYear(),
     password = process.env.password,
     db = require("./knex/db"),
+    apiCount = 0,
     request = require('superagent');
 
 app.use(express.static(__dirname));
@@ -18,15 +19,18 @@ app.listen(3000,  () => {
   console.log('listening on port ', 3000);
 });
 
-request.get("https://blockchain.info/ticker",(err,data) => {
-  console.log("Today's bitcoin price: $NZD", data.body.NZD.buy)
-})
+getPrice(0);
+
+function getPrice(time){
+  setTimeout(() => {
+    request.get("https://blockchain.info/ticker",(err,data) => {
+      console.log("Today's bitcoin price: $NZD", data.body.NZD.buy)
+      getPrice(60000) //checks price every ten minutes
+    })
+  },time)
+}
 
 findCharities() //starts of the process
-
-setTimeout(() => {
-  findCharities()
-}, 600001); //checks every 10 minutes
 
 function findCharities(){
   db.getCharities()
@@ -43,27 +47,32 @@ function findCharities(){
 
 function scanBlockchain (addresses) {
   for(address of addresses){
-    var query = "http://btc.blockr.io/api/v1/address/txs/" + address.charityAddress
-    request.get(query, (req,res) => {
-      var length = res.body.data.txs.length
-      for(i=0;i<length;i++){
-        var transaction = res.body.data.txs[i]
-        if(transaction.time_utc.substring(0,4) > year - 5){
-          //only selects donations that were done less than 5 years ago
-          var dataObj = {
-            value: transaction.amount,
-            charity:address.charityAddress,
-            tx:transaction.tx
-          }
-          if(dataObj.value > 0){
-            getDonor(dataObj)
-          }
-          else{
-            console.log("this is a spend not a donation")
+    if(apiCount < 150){
+      apiCount++
+      var query = "http://btc.blockr.io/api/v1/address/txs/" + address.charityAddress
+      request.get(query, (req,res) => {
+        var length = res.body.data.txs.length
+        for(i=0;i<length;i++){
+          var transaction = res.body.data.txs[i]
+          if(transaction.time_utc.substring(0,4) > year - 5){
+            //only selects donations that were done less than 5 years ago
+            var dataObj = {
+              value: transaction.amount,
+              charity:address.charityAddress,
+              tx:transaction.tx
+            }
+            if(dataObj.value > 0){
+              getDonor(dataObj) //gets only inputs (donations) and not outputs (spends)
+            }
           }
         }
-      }
-    })
+      })
+    }
+    else{
+      //can only make 300 calls per minute to blockr, 150 from here, 150 from getDonor()
+      console.log("API limit reached, waiting 1 minute")
+      setTimeout(() => { findCharities() },60000)
+    }
   }
 }
 
