@@ -28,6 +28,7 @@
     "browserify": "^13.0.0",
     "dotenv": "^2.0.0",
     "express": "^4.13.4",
+    "express-limiter": "^1.6.0",
     "knex": "^0.10.0",
     "mandrill": "^0.1.0",
     "node-mandrill": "^1.0.1",

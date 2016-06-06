@@ -8,9 +8,17 @@ var express = require('express'),
     year = new Date().getFullYear(),
     password = process.env.password,
     db = require("./knex/db"),
-    // limit = require("simple-rate-limiter"),
-    // request = limit(require("request")).to(300).per(60000);
     request = require('superagent');
+
+var limiter = require('express-limiter')(app, request)
+
+limiter({
+  path: '*',
+  method: 'get',
+  // 300 requests per minute
+  total: 300,
+  expire: 60000
+})
 
 app.use(express.static(__dirname));
 app.use(bodyParser.json())
