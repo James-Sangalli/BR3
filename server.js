@@ -8,7 +8,8 @@ var express = require('express'),
     year = new Date().getFullYear(),
     password = process.env.password,
     db = require("./knex/db"),
-    apiCount = 0,
+    // limit = require("simple-rate-limiter"),
+    // request = limit(require("request")).to(300).per(60000);
     request = require('superagent');
 
 app.use(express.static(__dirname));
@@ -47,32 +48,24 @@ function findCharities(){
 
 function scanBlockchain (addresses) {
   for(address of addresses){
-    if(apiCount < 150){
-      apiCount++
-      var query = "http://btc.blockr.io/api/v1/address/txs/" + address.charityAddress
-      request.get(query, (req,res) => {
-        var length = res.body.data.txs.length
-        for(i=0;i<length;i++){
-          var transaction = res.body.data.txs[i]
-          if(transaction.time_utc.substring(0,4) > year - 5){
-            //only selects donations that were done less than 5 years ago
-            var dataObj = {
-              value: transaction.amount,
-              charity:address.charityAddress,
-              tx:transaction.tx
-            }
-            if(dataObj.value > 0){
-              getDonor(dataObj) //gets only inputs (donations) and not outputs (spends)
-            }
+    var query = "http://btc.blockr.io/api/v1/address/txs/" + address.charityAddress
+    request.get(query, (req,res) => {
+      var length = res.body.data.txs.length
+      for(i=0;i<length;i++){
+        var transaction = res.body.data.txs[i]
+        if(transaction.time_utc.substring(0,4) > year - 5){
+          //only selects donations that were done less than 5 years ago
+          var dataObj = {
+            value: transaction.amount,
+            charity:address.charityAddress,
+            tx:transaction.tx
+          }
+          if(dataObj.value > 0){
+            getDonor(dataObj) //gets only inputs (donations) and not outputs (spends)
           }
         }
-      })
-    }
-    else{
-      //can only make 300 calls per minute to blockr, 150 from here, 150 from getDonor()
-      console.log("API limit reached, waiting 1 minute")
-      setTimeout(() => { findCharities() },60000)
-    }
+      }
+    })
   }
 }
 
@@ -85,7 +78,7 @@ function getDonor(dataObj){
 }
 
 function payTo(dataObj,donor){
-  console.log("donation found!", dataObj.tx)
+  // console.log("donation found!", dataObj.tx)
   //values that are spent are negative, we only want to take in donations or positive values
   db.searchPayments(dataObj.tx)
   .then((data) => {

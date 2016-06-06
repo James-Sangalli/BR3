@@ -5,8 +5,8 @@
   "scripts": {
     "knex-build": "knex migrate:rollback && knex migrate:latest && knex seed:run",
     "server": "cd knex && nodemon ../server.js",
-    "build":"browserify js/search.js > js/searchBundle.js",
-    "test":"node ./Tests/test"
+    "build": "browserify js/search.js > js/searchBundle.js",
+    "test": "node ./Tests/test"
   },
   "repository": {
     "type": "git",
@@ -31,6 +31,8 @@
     "knex": "^0.10.0",
     "mandrill": "^0.1.0",
     "node-mandrill": "^1.0.1",
+    "request": "^2.72.0",
+    "simple-rate-limiter": "^0.2.3",
     "superagent": "^1.8.3"
   },
   "devDependencies": {

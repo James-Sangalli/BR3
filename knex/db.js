@@ -8,10 +8,10 @@ module.exports = {
   },
 
   paymentDb:(paymentObj) => {
-    return knex("payments").insert({value:paymentDb.value,
-      address:paymentDb.address,
-      charity:paymentDb.charity,
-      tx:paymentDb.tx
+    return knex("payments").insert({value:paymentObj.value,
+      address:paymentObj.address,
+      charity:paymentObj.charity,
+      tx:paymentObj.tx
     })
   },
 
