@@ -8,9 +8,8 @@ var express = require('express'),
     year = new Date().getFullYear(),
     password = process.env.password,
     db = require("./knex/db"),
-    request = require('superagent');
-
-var limiter = require('express-limiter')(app, request)
+    request = require('superagent'),
+    limiter = require('express-limiter')(app, request);
 
 limiter({
   path: '*',
@@ -19,7 +18,7 @@ limiter({
   total: 300,
   expire: 60000
 })
-
+console.log(limiter)
 app.use(express.static(__dirname));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -117,7 +116,7 @@ function payout(value,address){
   app.post(query,(req,res) => {
     res.header( 'Access-Control-Allow-Origin','*' )
     console.log("Here is the data back from the server: ", res)
-    res.send("Payment completed!")
+    res.send(200, " Payment completed!")
   })
 }
 
