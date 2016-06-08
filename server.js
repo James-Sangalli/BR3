@@ -51,7 +51,6 @@ function scanBlockchain (addresses) {
     var query = "http://btc.blockr.io/api/v1/address/txs/" + address.charityAddress
     limit(request.get(query, (req,res) => {
       var length = res.body.data.txs.length
-      console.log(length)
       for(i=0;i<length;i++){
         var transaction = res.body.data.txs[i]
         if(transaction.time_utc.substring(0,4) > year - 5){
