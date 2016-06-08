@@ -8,9 +8,9 @@ var express = require('express'),
     year = new Date().getFullYear(),
     password = process.env.password,
     db = require("./knex/db"),
-    // request = require('superagent'),
     limit = require("simple-rate-limiter"),
-    request = limit(require("superagent")).to(300).per(60000);
+    //blockr can only handle >300 calls per minute
+    request = limit(require("superagent")).to(200).per(60000);
 
 app.use(express.static(__dirname));
 app.use(bodyParser.json())
