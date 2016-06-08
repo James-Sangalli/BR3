@@ -9,16 +9,9 @@ var express = require('express'),
     password = process.env.password,
     db = require("./knex/db"),
     request = require('superagent'),
-    limiter = require('express-limiter')(app, request);
+    Limiter = require('api-client-limiter'),
+    limit = new Limiter(300, 60000); //blockr api only allows 300 calls per minute
 
-limiter({
-  path: '*',
-  method: 'get',
-  // 300 requests per minute
-  total: 300,
-  expire: 60000
-})
-console.log(limiter)
 app.use(express.static(__dirname));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -32,7 +25,7 @@ getPrice(0);
 function getPrice(time){
   setTimeout(() => {
     request.get("https://blockchain.info/ticker",(err,data) => {
-      console.log("Today's bitcoin price: $NZD", data.body.NZD.buy)
+      console.log("bitcoin price: $NZD", data.body.NZD.buy)
       getPrice(60000) //checks price every ten minutes
     })
   },time)
@@ -56,8 +49,9 @@ function findCharities(){
 function scanBlockchain (addresses) {
   for(address of addresses){
     var query = "http://btc.blockr.io/api/v1/address/txs/" + address.charityAddress
-    request.get(query, (req,res) => {
+    limit(request.get(query, (req,res) => {
       var length = res.body.data.txs.length
+      console.log(length)
       for(i=0;i<length;i++){
         var transaction = res.body.data.txs[i]
         if(transaction.time_utc.substring(0,4) > year - 5){
@@ -72,20 +66,20 @@ function scanBlockchain (addresses) {
           }
         }
       }
-    })
+    }))
   }
 }
 
 function getDonor(dataObj){
   var query = "http://btc.blockr.io/api/v1/tx/info/"+dataObj.tx;
-  request.get(query,(err,data) => {
+  limit(request.get(query,(err,data) => {
     var donor = data.body.data.vins[0].address
     payTo(dataObj,donor)
-  })
+  }))
 }
 
 function payTo(dataObj,donor){
-  // console.log("donation found!", dataObj.tx)
+  console.log("donation found!", dataObj.tx)
   //values that are spent are negative, we only want to take in donations or positive values
   db.searchPayments(dataObj.tx)
   .then((data) => {
