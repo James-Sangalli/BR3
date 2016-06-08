@@ -8,9 +8,9 @@ var express = require('express'),
     year = new Date().getFullYear(),
     password = process.env.password,
     db = require("./knex/db"),
-    request = require('superagent'),
-    Limiter = require('api-client-limiter'),
-    limit = new Limiter(300, 60000); //blockr api only allows 300 calls per minute
+    limit = require("simple-rate-limiter"),
+    //blockr can only handle >300 calls per minute
+    request = limit(require("superagent")).to(200).per(60000);
 
 app.use(express.static(__dirname));
 app.use(bodyParser.json())
@@ -24,7 +24,7 @@ getPrice(0);
 
 function getPrice(time){
   setTimeout(() => {
-    request.get("https://blockchain.info/ticker",(err,data) => {
+    request("https://blockchain.info/ticker",(err,data) => {
       console.log("bitcoin price: $NZD", data.body.NZD.buy)
       getPrice(60000) //checks price every ten minutes
     })
@@ -49,9 +49,8 @@ function findCharities(){
 function scanBlockchain (addresses) {
   for(address of addresses){
     var query = "http://btc.blockr.io/api/v1/address/txs/" + address.charityAddress
-    limit(request.get(query, (req,res) => {
+    request(query, (req,res) => {
       var length = res.body.data.txs.length
-      console.log(length)
       for(i=0;i<length;i++){
         var transaction = res.body.data.txs[i]
         if(transaction.time_utc.substring(0,4) > year - 5){
@@ -66,16 +65,16 @@ function scanBlockchain (addresses) {
           }
         }
       }
-    }))
+    })
   }
 }
 
 function getDonor(dataObj){
   var query = "http://btc.blockr.io/api/v1/tx/info/"+dataObj.tx;
-  limit(request.get(query,(err,data) => {
+  request(query,(err,data) => {
     var donor = data.body.data.vins[0].address
     payTo(dataObj,donor)
-  }))
+  })
 }
 
 function payTo(dataObj,donor){
