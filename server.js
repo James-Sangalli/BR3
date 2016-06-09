@@ -83,15 +83,15 @@ function getDonor(dataObj){
 }
 
 function payTo(dataObj,donor){
-  // console.log("donation found!", dataObj.tx)
+  console.log("donation found!", dataObj.tx)
   //values that are spent are negative, we only want to take in donations or positive values
   db.searchPayments(dataObj.tx)
   .then((data) => {
-    if(data[0] != {}){
-      // console.log(data[0])
+    if(data[0]){
+      console.log(data[0])
       /*do nothing as donation rebate has already been handled*/
     }
-    else if (data[0] == {}){
+    else{
       console.log("Paying out to donor: ", donor)
       payout(dataObj.value,donor)
       addPaymentToDB(dataObj.value,donor,dataObj.charity,dataObj.tx)
