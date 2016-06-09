@@ -10,7 +10,7 @@ var express = require('express'),
     db = require("./knex/db"),
     limit = require("simple-rate-limiter"),
     //blockr can only handle >300 calls per minute
-    request = limit(require("superagent")).to(1).per(1000);
+    request = limit(require("superagent")).to(3).per(1000);
 
 app.use(express.static(__dirname));
 app.use(bodyParser.json())
@@ -26,7 +26,7 @@ function getPrice(time){
   setTimeout(() => {
     request("https://blockchain.info/ticker",(err,data) => {
       console.log("bitcoin price: $NZD", data.body.NZD.buy)
-      getPrice(60000) //checks price every ten minutes
+      getPrice(600000) //checks price every ten minutes
     })
   },time)
 }
@@ -36,7 +36,7 @@ findCharities() //starts of the process
 function findCharities(){
   db.getCharities()
   .then((data) => {
-    scanBlockchain(data)
+    getCharity(data)
   })
   .catch((err) => {
     if (err){
@@ -46,27 +46,32 @@ function findCharities(){
   })
 }
 
-function scanBlockchain (addresses) {
+function getCharity (addresses) {
   for(address of addresses){
-    var query = "http://btc.blockr.io/api/v1/address/txs/" + address.charityAddress
-    request(query, (req,res) => {
-      var length = res.body.data.txs.length
-      for(i=0;i<length;i++){
-        var transaction = res.body.data.txs[i]
-        if(transaction.time_utc.substring(0,4) > year - 5){
-          //only selects donations that were done less than 5 years ago
-          var dataObj = {
-            value: transaction.amount,
-            charity:address.charityAddress,
-            tx:transaction.tx
-          }
-          if(dataObj.value > 0){
-            getDonor(dataObj) //gets only inputs (donations) and not outputs (spends)
-          }
+    var charity = address.charityAddress
+    getDonations(charity)
+  }
+}
+
+function getDonations(charity){
+  var query = "http://btc.blockr.io/api/v1/address/txs/" + charity
+  request(query, (req,res) => {
+    var length = res.body.data.txs.length
+    for(i=0;i<length;i++){
+      var transaction = res.body.data.txs[i]
+      if(transaction.time_utc.substring(0,4) > year - 5){
+        //only selects donations that were done less than 5 years ago
+        var dataObj = {
+          value: transaction.amount,
+          charity:charity,
+          tx:transaction.tx
+        }
+        if(dataObj.value > 0){
+          getDonor(dataObj) //gets only inputs (donations) and not outputs (spends)
         }
       }
-    })
-  }
+    }
+  })
 }
 
 function getDonor(dataObj){
@@ -78,11 +83,14 @@ function getDonor(dataObj){
 }
 
 function payTo(dataObj,donor){
-  // console.log("donation found!", dataObj.tx)
+  console.log("donation found!", dataObj.tx)
   //values that are spent are negative, we only want to take in donations or positive values
   db.searchPayments(dataObj.tx)
   .then((data) => {
-    if(data[0]){/*do nothing as donation rebate has already been handled*/}
+    if(data[0]){
+      console.log(data[0])
+      /*do nothing as donation rebate has already been handled*/
+    }
     else{
       console.log("Paying out to donor: ", donor)
       payout(dataObj.value,donor)
