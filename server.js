@@ -10,7 +10,7 @@ var express = require('express'),
     db = require("./knex/db"),
     limit = require("simple-rate-limiter"),
     //blockr can only handle >300 calls per minute
-    request = limit(require("superagent")).to(25).per(6000);
+    request = limit(require("superagent")).to(1).per(1000);
 
 app.use(express.static(__dirname));
 app.use(bodyParser.json())
@@ -78,13 +78,11 @@ function getDonor(dataObj){
 }
 
 function payTo(dataObj,donor){
-  console.log("donation found!", dataObj.tx)
+  // console.log("donation found!", dataObj.tx)
   //values that are spent are negative, we only want to take in donations or positive values
   db.searchPayments(dataObj.tx)
   .then((data) => {
-    if(data){
-      console.log(data) //assumes payout has already been made
-    }
+    if(data[0]){/*do nothing as donation rebate has already been handled*/}
     else{
       console.log("Paying out to donor: ", donor)
       payout(dataObj.value,donor)
