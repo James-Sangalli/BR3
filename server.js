@@ -10,7 +10,7 @@ var express = require('express'),
     db = require("./knex/db"),
     limit = require("simple-rate-limiter"),
     //blockr can only handle >300 calls per minute
-    request = limit(require("superagent")).to(1).per(1000);
+    request = limit(require("superagent")).to(3).per(1000);
 
 app.use(express.static(__dirname));
 app.use(bodyParser.json())
@@ -26,7 +26,7 @@ function getPrice(time){
   setTimeout(() => {
     request("https://blockchain.info/ticker",(err,data) => {
       console.log("bitcoin price: $NZD", data.body.NZD.buy)
-      getPrice(60000) //checks price every ten minutes
+      getPrice(600000) //checks price every ten minutes
     })
   },time)
 }
@@ -48,6 +48,7 @@ function findCharities(){
 
 function scanBlockchain (addresses) {
   for(address of addresses){
+    console.log("The Current address being scanned: ", address)
     var query = "http://btc.blockr.io/api/v1/address/txs/" + address.charityAddress
     request(query, (req,res) => {
       var length = res.body.data.txs.length
@@ -82,8 +83,11 @@ function payTo(dataObj,donor){
   //values that are spent are negative, we only want to take in donations or positive values
   db.searchPayments(dataObj.tx)
   .then((data) => {
-    if(data[0]){/*do nothing as donation rebate has already been handled*/}
-    else{
+    if(data[0] != {}){
+      // console.log(data[0])
+      /*do nothing as donation rebate has already been handled*/
+    }
+    else if (data[0] == {}){
       console.log("Paying out to donor: ", donor)
       payout(dataObj.value,donor)
       addPaymentToDB(dataObj.value,donor,dataObj.charity,dataObj.tx)
