@@ -36,7 +36,7 @@ findCharities() //starts of the process
 function findCharities(){
   db.getCharities()
   .then((data) => {
-    scanBlockchain(data)
+    queryBuilder(data)
   })
   .catch((err) => {
     if (err){
@@ -46,28 +46,32 @@ function findCharities(){
   })
 }
 
-function scanBlockchain (addresses) {
+function queryBuilder (addresses) {
   for(address of addresses){
-    console.log("The Current address being scanned: ", address)
     var query = "http://btc.blockr.io/api/v1/address/txs/" + address.charityAddress
-    request(query, (req,res) => {
-      var length = res.body.data.txs.length
-      for(i=0;i<length;i++){
-        var transaction = res.body.data.txs[i]
-        if(transaction.time_utc.substring(0,4) > year - 5){
-          //only selects donations that were done less than 5 years ago
-          var dataObj = {
-            value: transaction.amount,
-            charity:address.charityAddress,
-            tx:transaction.tx
-          }
-          if(dataObj.value > 0){
-            getDonor(dataObj) //gets only inputs (donations) and not outputs (spends)
-          }
+    getDonations(query)
+  }
+}
+
+function getDonations(query){
+  request(query, (req,res) => {
+    console.log(query)
+    var length = res.body.data.txs.length
+    for(i=0;i<length;i++){
+      var transaction = res.body.data.txs[i]
+      if(transaction.time_utc.substring(0,4) > year - 5){
+        //only selects donations that were done less than 5 years ago
+        var dataObj = {
+          value: transaction.amount,
+          charity:address.charityAddress,
+          tx:transaction.tx
+        }
+        if(dataObj.value > 0){
+          getDonor(dataObj) //gets only inputs (donations) and not outputs (spends)
         }
       }
-    })
-  }
+    }
+  })
 }
 
 function getDonor(dataObj){
