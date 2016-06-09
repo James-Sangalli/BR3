@@ -10,7 +10,7 @@ var express = require('express'),
     db = require("./knex/db"),
     limit = require("simple-rate-limiter"),
     //blockr can only handle >300 calls per minute
-    request = limit(require("superagent")).to(200).per(60000);
+    request = limit(require("superagent")).to(25).per(6000);
 
 app.use(express.static(__dirname));
 app.use(bodyParser.json())
@@ -83,12 +83,12 @@ function payTo(dataObj,donor){
   db.searchPayments(dataObj.tx)
   .then((data) => {
     if(data){
+      console.log(data) //assumes payout has already been made
+    }
+    else{
       console.log("Paying out to donor: ", donor)
       payout(dataObj.value,donor)
       addPaymentToDB(dataObj.value,donor,dataObj.charity,dataObj.tx)
-    }
-    else{
-      console.log(data) //assumes payout has already been made
     }
   })
   .catch((err) => {
