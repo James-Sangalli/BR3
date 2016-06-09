@@ -36,7 +36,7 @@ findCharities() //starts of the process
 function findCharities(){
   db.getCharities()
   .then((data) => {
-    queryBuilder(data)
+    getCharity(data)
   })
   .catch((err) => {
     if (err){
@@ -46,16 +46,16 @@ function findCharities(){
   })
 }
 
-function queryBuilder (addresses) {
+function getCharity (addresses) {
   for(address of addresses){
-    var query = "http://btc.blockr.io/api/v1/address/txs/" + address.charityAddress
-    getDonations(query)
+    var charity = address.charityAddress
+    getDonations(charity)
   }
 }
 
-function getDonations(query){
+function getDonations(charity){
+  var query = "http://btc.blockr.io/api/v1/address/txs/" + charity
   request(query, (req,res) => {
-    console.log(query)
     var length = res.body.data.txs.length
     for(i=0;i<length;i++){
       var transaction = res.body.data.txs[i]
@@ -63,7 +63,7 @@ function getDonations(query){
         //only selects donations that were done less than 5 years ago
         var dataObj = {
           value: transaction.amount,
-          charity:address.charityAddress,
+          charity:charity,
           tx:transaction.tx
         }
         if(dataObj.value > 0){
