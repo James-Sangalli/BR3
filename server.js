@@ -6,7 +6,8 @@ var express = require('express'),
     knex = require('knex')(config[env]),
     bodyParser = require('body-parser'),
     year = new Date().getFullYear(),
-    password = process.env.password,
+    password = "",
+    username = "",
     db = require("./knex/db"),
     limit = require("simple-rate-limiter"),
     //blockr can only handle >300 calls per minute
@@ -20,8 +21,6 @@ app.listen(3000,  () => {
   console.log('listening on port ', 3000);
 });
 
-getPrice(0);
-
 function getPrice(time){
   setTimeout(() => {
     request("https://blockchain.info/ticker",(err,data) => {
@@ -30,8 +29,6 @@ function getPrice(time){
     })
   },time)
 }
-
-findCharities() //starts of the process
 
 function findCharities(){
   db.getCharities()
