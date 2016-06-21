@@ -1,9 +1,11 @@
 var express = require('express'),
     app = express(),
     config = require('./knex/knexfile.js'),
-    env = process.env.NODE_ENV || 'development',
     dotenv = require("dotenv"),
+    env = process.env.NODE_ENV || 'development',
     knex = require('knex')(config[env]),
+    password = process.env.password,
+    username = process.env.username,
     bodyParser = require('body-parser'),
     year = new Date().getFullYear(),
     db = require("./knex/db"),
@@ -18,6 +20,9 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.listen(3000,  () => {
   console.log('listening on port ', 3000);
 });
+
+getPrice(0);
+findCharities();
 
 function getPrice(time){
   setTimeout(() => {
