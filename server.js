@@ -6,8 +6,6 @@ var express = require('express'),
     knex = require('knex')(config[env]),
     bodyParser = require('body-parser'),
     year = new Date().getFullYear(),
-    password = "",
-    username = "",
     db = require("./knex/db"),
     limit = require("simple-rate-limiter"),
     //blockr can only handle >300 calls per minute
