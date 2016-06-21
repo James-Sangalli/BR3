@@ -8,7 +8,7 @@ var express = require('express'),
     year = new Date().getFullYear(),
     db = require("./knex/db"),
     limit = require("simple-rate-limiter"),
-    //blockr can only handle >300 calls per minute
+    //blockr can only handle <300 calls per minute
     request = limit(require("superagent")).to(3).per(1000);
 
 app.use(express.static(__dirname));
