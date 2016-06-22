@@ -37,6 +37,8 @@ To make the blockchain server run so that payments to donors can be executed, fi
 then run the server at:
 #$ blockchain-wallet-service start --port 3000
 
+(for more info regarding blockchain wallet service see this link: https://github.com/blockchain/service-my-wallet-v3)
+
 then run this program:
 
 #npm run server
