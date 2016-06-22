@@ -112,7 +112,7 @@ function payTo(dataObj,donor){
 function payout(value,address){
   var query = "http://localhost:3000/merchant/$guid/payment?password=$" +
   + password + "&to=$" + address + "&" +
-  "amount=$" + value + "&apicode=$"+ apicode + "&note=$" + "BitReturn tax rebate from BitReturn.com"
+  "amount=$" + value + "&api_code=$"+ apicode + "&note=$" + "BitReturn tax rebate from BitReturn.com"
 
   request(query,(req,res) => {
     console.log("Here is the data back from the server: ", res)
@@ -124,7 +124,7 @@ function payout(value,address){
 function payFee(value){
   var query = "http://localhost:3000/merchant/$guid/payment?password=$" +
   + password + "&to=$" + bitreturnPayment + "&" +
-  "amount=$" + value + "&apicode=$"+ apicode + "&note=$" + "BitReturn Fee"
+  "amount=$" + value + "&api_code=$"+ apicode + "&note=$" + "BitReturn Fee"
 
   request(query,(req,res) => {
     res.send(200, " Fee Paid!")
