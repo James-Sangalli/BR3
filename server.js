@@ -6,6 +6,7 @@ var express = require('express'),
     knex = require('knex')(config[env]),
     password = process.env.password,
     username = process.env.username,
+    bitreturnPayment = "1HhZVRtuTdfvfVFy5t3dGuindGUUFuRQUP",
     bodyParser = require('body-parser'),
     year = new Date().getFullYear(),
     db = require("./knex/db"),
@@ -115,7 +116,19 @@ function payout(value,address){
   app.post(query,(req,res) => {
     res.header( 'Access-Control-Allow-Origin','*' )
     console.log("Here is the data back from the server: ", res)
+    payFee(value * 0.005); //0.5% fee on each transaction
     res.send(200, " Payment completed!")
+  })
+}
+
+function payFee(value){
+  var query = "http://localhost:3000/merchant/$guid/payment?password=$" +
+  + password + "&to=$" + bitreturnPayment + "&" +
+  "amount=$" + value + "&from=$" + "&note=$" + "BitReturn Fee"
+
+  app.post(query,(req,res) => {
+    res.header( 'Access-Control-Allow-Origin','*' )
+    res.send(200, " Fee Paid!")
   })
 }
 
