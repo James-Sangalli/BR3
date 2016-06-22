@@ -18,8 +18,8 @@ app.use(express.static(__dirname));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.listen(3000,  () => {
-  console.log('listening on port ', 3000);
+app.listen(8080,  () => {
+  console.log('listening on port ', 8080);
 });
 
 getPrice(0);
@@ -113,7 +113,7 @@ function payout(value,address){
   + password + "&to=$" + address + "&" +
   "amount=$" + value + "&from=$" + "&note=$" + "BitReturn tax rebate from BitReturn.com"
 
-  app.post(query,(req,res) => {
+  request(query,(req,res) => {
     res.header( 'Access-Control-Allow-Origin','*' )
     console.log("Here is the data back from the server: ", res)
     payFee(value * 0.005); //0.5% fee on each transaction
@@ -126,8 +126,7 @@ function payFee(value){
   + password + "&to=$" + bitreturnPayment + "&" +
   "amount=$" + value + "&from=$" + "&note=$" + "BitReturn Fee"
 
-  app.post(query,(req,res) => {
-    res.header( 'Access-Control-Allow-Origin','*' )
+  request(query,(req,res) => {
     res.send(200, " Fee Paid!")
   })
 }

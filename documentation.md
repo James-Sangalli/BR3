@@ -27,3 +27,16 @@
 ##app.post("/search/:searchTerm",(req,res) => {
   this post request responds to the client and allows users to search the approvedCharitiesTable database table for approved charities.
 })
+
+##blockchain server
+
+To make the blockchain server run so that payments to donors can be executed, first install blockchain wallet service by running the following(node.js is needed).
+
+#$ npm install -g blockchain-wallet-service
+
+then run the server at:
+#$ blockchain-wallet-service start --port 3000
+
+then run this program:
+
+#npm run server
