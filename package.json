@@ -33,6 +33,7 @@
     "knex": "^0.10.0",
     "mandrill": "^0.1.0",
     "node-mandrill": "^1.0.1",
+    "prompt": "^1.0.0",
     "request": "^2.72.0",
     "simple-rate-limiter": "^0.2.3",
     "superagent": "^1.8.3"

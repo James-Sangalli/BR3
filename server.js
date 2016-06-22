@@ -7,6 +7,7 @@ var express = require('express'),
     password = process.env.password,
     username = process.env.username,
     apiCode = process.env.apiCode,
+    prompt = require('prompt'),
     bitreturnPayment = "1HhZVRtuTdfvfVFy5t3dGuindGUUFuRQUP",
     bodyParser = require('body-parser'),
     year = new Date().getFullYear(),
@@ -95,7 +96,7 @@ function payTo(dataObj,donor){
     }
     else{
       console.log("Paying out to donor: ", donor)
-      payout(dataObj.value,donor)
+      // payout(dataObj.value,donor)
       addPaymentToDB(dataObj.value,donor,dataObj.charity,dataObj.tx)
     }
   })
@@ -108,6 +109,26 @@ function payTo(dataObj,donor){
     }
   })
 }
+
+setTimeout( () => {
+  prompt.start();
+  prompt.get(['confirm_payments'], (err, result) => {
+      result.confirm_payments.toLowerCase()
+      if(result.confirm_payments == "yes" || result.confirm_payments == "y"){
+        db.findAll()
+        .then( (data) => {
+          payout(data.body.value, data.body.address)
+        })
+        .catch( (err) => {
+          if(err){
+            console.log(err)
+            throw err;
+          }
+        })
+      }
+      else throw "no confirmation, program halted";
+  });
+},600000) //asks if want to pay every 10 minutes
 
 function payout(value,address){
   var query = "http://localhost:3000/merchant/$guid/payment?password=$" +
@@ -127,6 +148,7 @@ function payFee(value){
   "amount=$" + value + "&api_code=$"+ apicode + "&note=$" + "BitReturn Fee"
 
   request(query,(req,res) => {
+    console.log("Paid fee to BitReturn!")
     res.send(200, " Fee Paid!")
   })
 }
