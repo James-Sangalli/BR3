@@ -32,13 +32,13 @@
 
 To make the blockchain server run so that payments to donors can be executed, first install blockchain wallet service by running the following(node.js is needed).
 
-#$ npm install -g blockchain-wallet-service
+###$ npm install -g blockchain-wallet-service
 
 then run the server at:
-#$ blockchain-wallet-service start --port 3000
+###$ blockchain-wallet-service start --port 3000
 
 (for more info regarding blockchain wallet service see this link: https://github.com/blockchain/service-my-wallet-v3)
 
 then run this program:
 
-#npm run server
+###npm run server
