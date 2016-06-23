@@ -82,7 +82,7 @@ function payTo(dataObj,donor){
       /*do nothing as donation rebate has already been handled*/
     }
     else{
-      console.log("Paying out to donor: ", donor)
+      console.log("Adding donation to db ", donor)
       addPaymentToDB(dataObj.value,donor,dataObj.charity,dataObj.tx)
     }
   })

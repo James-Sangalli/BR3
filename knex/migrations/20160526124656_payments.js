@@ -6,6 +6,7 @@ exports.up = function(knex, Promise) {
     table.string('address')
     table.string('charity')
     table.string("tx").unique()
+    table.boolean("paid").defaultTo(false)
   })
 };
 

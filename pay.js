@@ -19,12 +19,23 @@ app.listen(3001,  () => {
 });
 
 function findPayees(){
-  db.findAll()
+  db.findUnpaid()
   .then( (data) => {
-    payout(data[0].value, data[0].address)
+    payout(data[0].value * 0.33 , data[0].address)
+    paid(data[0].tx)
   })
   .catch( (err) => {
     if (err) throw err
+  })
+}
+
+function paid(tx){
+  db.paid(tx)
+  .then( (data) => {
+    console.log("paid tax rebate ", data)
+  })
+  .catch( (err) => {
+    if (err) throw err;
   })
 }
 
