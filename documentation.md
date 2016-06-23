@@ -39,6 +39,6 @@ then run the server at:
 
 (for more info regarding blockchain wallet service see this link: https://github.com/blockchain/service-my-wallet-v3)
 
-then run this program:
+then run this program with this:
 
-###npm run server
+###$ npm run server
