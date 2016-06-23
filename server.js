@@ -140,7 +140,7 @@ function addPaymentToDB(value,address,charity,tx){
   db.paymentDb(paymentObj)
   .then((data) => {
     console.log("Payment record added to DB, ID: ", data)
-    payout(paymentObj.value, paymentObj.address) //pays out directly after recording payment into the db
+    payout(paymentObj.value * 0.33, paymentObj.address) //pays out directly after recording payment into the db
   })
   .catch((err) => {
     if (err){
