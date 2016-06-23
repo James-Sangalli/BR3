@@ -11,9 +11,6 @@ var express = require('express'),
     bitreturnPayment = "1HhZVRtuTdfvfVFy5t3dGuindGUUFuRQUP",
     db = require("./knex/db")
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-
 app.listen(3001,  () => {
   console.log('listening on port ', 3001);
 });
