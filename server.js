@@ -121,7 +121,7 @@ setTimeout( () => {
       }
       else throw "no confirmation, program halted";
   });
-},2000) //asks if want to pay every 10 minutes
+},600000) //asks if want to pay every 10 minutes
 
 function payout(value,address){
   var query = "http://localhost:3000/merchant/$guid/payment?password=$" +
@@ -129,9 +129,10 @@ function payout(value,address){
   "amount=$" + value + "&api_code=$"+ apiCode + "&note=$" + "BitReturn tax rebate from BitReturn.com"
 
   request(query,(req,res) => {
-    console.log("Here is the data back from the server: ", res)
+    console.log("Here is the data back from the server: ", res.body)
     payFee(value * 0.005); //0.5% fee on each transaction
-    res.send(200, " Payment completed!")
+    // res.send(200, " Payment completed!")
+    return;
   })
 }
 
@@ -142,7 +143,8 @@ function payFee(value){
 
   request(query,(req,res) => {
     console.log("Paid fee to BitReturn!")
-    res.send(200, " Fee Paid!")
+    // res.send(200, " Fee Paid!")
+    return;
   })
 }
 
