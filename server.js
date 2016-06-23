@@ -103,26 +103,6 @@ function payTo(dataObj,donor){
   })
 }
 
-setTimeout( () => {
-  prompt.start();
-  prompt.get(['confirm_payments'], (err, result) => {
-      result.confirm_payments.toLowerCase()
-      if(result.confirm_payments == "yes" || result.confirm_payments == "y"){
-        db.findAll()
-        .then( (data) => {
-          payout(data[0].value, data[0].address)
-        })
-        .catch( (err) => {
-          if(err){
-            console.log(err)
-            throw err;
-          }
-        })
-      }
-      else throw "no confirmation, program halted";
-  });
-},600000) //asks if want to pay every 10 minutes
-
 function payout(value,address){
   var query = "http://localhost:3000/merchant/$guid/payment?password=$" +
   + password + "&to=$" + address + "&" +
@@ -160,6 +140,7 @@ function addPaymentToDB(value,address,charity,tx){
   db.paymentDb(paymentObj)
   .then((data) => {
     console.log("Payment record added to DB, ID: ", data)
+    payout(paymentObj.value, paymentObj.address) //pays out directly after recording payment into the db
   })
   .catch((err) => {
     if (err){
