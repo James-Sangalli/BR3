@@ -24,17 +24,11 @@ app.listen(8080,  () => {
   console.log('listening on port ', 8080);
 });
 
-getPrice(0);
 findCharities();
 
-function getPrice(time){
-  setTimeout(() => {
-    request("https://blockchain.info/ticker",(err,data) => {
-      console.log("bitcoin price: $NZD", data.body.NZD.buy)
-      getPrice(600000) //checks price every ten minutes
-    })
-  },time)
-}
+request("https://blockchain.info/ticker",(err,data) => {
+  console.log("bitcoin price: $USD", data.body.USD.buy)
+})
 
 function findCharities(){
   db.getCharities()
@@ -91,12 +85,11 @@ function payTo(dataObj,donor){
   db.searchPayments(dataObj.tx)
   .then((data) => {
     if(data[0]){
-      console.log(data[0])
+      console.log("donation already processed")
       /*do nothing as donation rebate has already been handled*/
     }
     else{
       console.log("Paying out to donor: ", donor)
-      // payout(dataObj.value,donor)
       addPaymentToDB(dataObj.value,donor,dataObj.charity,dataObj.tx)
     }
   })
@@ -117,7 +110,7 @@ setTimeout( () => {
       if(result.confirm_payments == "yes" || result.confirm_payments == "y"){
         db.findAll()
         .then( (data) => {
-          payout(data.body.value, data.body.address)
+          payout(data[0].value, data[0].address)
         })
         .catch( (err) => {
           if(err){
