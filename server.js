@@ -1,12 +1,14 @@
+var dotenv = require("dotenv");
+dotenv.load();
 var express = require('express'),
     app = express(),
     config = require('./knex/knexfile.js'),
-    dotenv = require("dotenv"),
     env = process.env.NODE_ENV || 'development',
     knex = require('knex')(config[env]),
     password = process.env.password,
     username = process.env.username,
     apiCode = process.env.apiCode,
+    prompt = require('prompt'),
     bitreturnPayment = "1HhZVRtuTdfvfVFy5t3dGuindGUUFuRQUP",
     bodyParser = require('body-parser'),
     year = new Date().getFullYear(),
@@ -15,7 +17,6 @@ var express = require('express'),
     //blockr can only handle <300 calls per minute
     request = limit(require("superagent")).to(3).per(1000);
 
-app.use(express.static(__dirname));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -23,17 +24,11 @@ app.listen(8080,  () => {
   console.log('listening on port ', 8080);
 });
 
-getPrice(0);
 findCharities();
 
-function getPrice(time){
-  setTimeout(() => {
-    request("https://blockchain.info/ticker",(err,data) => {
-      console.log("bitcoin price: $NZD", data.body.NZD.buy)
-      getPrice(600000) //checks price every ten minutes
-    })
-  },time)
-}
+request("https://blockchain.info/ticker",(err,data) => {
+  console.log("bitcoin price: $USD", data.body.USD.buy)
+})
 
 function findCharities(){
   db.getCharities()
@@ -90,12 +85,11 @@ function payTo(dataObj,donor){
   db.searchPayments(dataObj.tx)
   .then((data) => {
     if(data[0]){
-      console.log(data[0])
+      console.log("donation already processed")
       /*do nothing as donation rebate has already been handled*/
     }
     else{
       console.log("Paying out to donor: ", donor)
-      payout(dataObj.value,donor)
       addPaymentToDB(dataObj.value,donor,dataObj.charity,dataObj.tx)
     }
   })
@@ -109,25 +103,48 @@ function payTo(dataObj,donor){
   })
 }
 
+setTimeout( () => {
+  prompt.start();
+  prompt.get(['confirm_payments'], (err, result) => {
+      result.confirm_payments.toLowerCase()
+      if(result.confirm_payments == "yes" || result.confirm_payments == "y"){
+        db.findAll()
+        .then( (data) => {
+          payout(data[0].value, data[0].address)
+        })
+        .catch( (err) => {
+          if(err){
+            console.log(err)
+            throw err;
+          }
+        })
+      }
+      else throw "no confirmation, program halted";
+  });
+},600000) //asks if want to pay every 10 minutes
+
 function payout(value,address){
   var query = "http://localhost:3000/merchant/$guid/payment?password=$" +
   + password + "&to=$" + address + "&" +
-  "amount=$" + value + "&api_code=$"+ apicode + "&note=$" + "BitReturn tax rebate from BitReturn.com"
+  "amount=$" + value + "&api_code=$"+ apiCode + "&note=$" + "BitReturn tax rebate from BitReturn.com"
 
   request(query,(req,res) => {
-    console.log("Here is the data back from the server: ", res)
+    console.log("Here is the data back from the server: ", res.body)
     payFee(value * 0.005); //0.5% fee on each transaction
-    res.send(200, " Payment completed!")
+    // res.send(200, " Payment completed!")
+    return;
   })
 }
 
 function payFee(value){
   var query = "http://localhost:3000/merchant/$guid/payment?password=$" +
   + password + "&to=$" + bitreturnPayment + "&" +
-  "amount=$" + value + "&api_code=$"+ apicode + "&note=$" + "BitReturn Fee"
+  "amount=$" + value + "&api_code=$"+ apiCode + "&note=$" + "BitReturn Fee"
 
   request(query,(req,res) => {
-    res.send(200, " Fee Paid!")
+    console.log("Paid fee to BitReturn!")
+    // res.send(200, " Fee Paid!")
+    return;
   })
 }
 

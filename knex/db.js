@@ -22,6 +22,10 @@ module.exports = {
 
   searchPayments:(tx) => {
     return knex("payments").select().where("tx",tx);
+  },
+
+  findAll: () => {
+    return knex('payments').select();
   }
 
 }
