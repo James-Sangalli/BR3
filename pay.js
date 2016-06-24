@@ -7,6 +7,7 @@ var express = require('express'),
     knex = require('knex')(config[env]),
     password = process.env.password,
     username = process.env.username,
+    request = require("superagent"),
     apiCode = process.env.apiCode,
     bitreturnPayment = "1HhZVRtuTdfvfVFy5t3dGuindGUUFuRQUP",
     db = require("./knex/db")
@@ -20,8 +21,8 @@ function findPayees(){
   console.log("HI")
   db.findUnpaid()
   .then( (data) => {
-    payout(data[0].value * 0.33 , data[0].address)
     paid(data[0].tx)
+    payout(data[0].value * 0.33 , data[0].address)
   })
   .catch( (err) => {
     if (err) throw err
@@ -43,7 +44,7 @@ function payout(value,address) {
   + password + "&to=$" + address + "&" +
   "amount=$" + value + "&api_code=$"+ apiCode + "&note=$" + "BitReturn tax rebate from BitReturn.com"
 
-  request(query,(req,res) => {
+  request.get(query,(req,res) => {
     console.log("Here is the data back from the server: ", res.body)
     payFee(value * 0.005); //0.5% fee on each transaction
     // res.send(200, " Payment completed!")
@@ -56,7 +57,7 @@ function payFee(value){
   + password + "&to=$" + bitreturnPayment + "&" +
   "amount=$" + value + "&api_code=$"+ apiCode + "&note=$" + "BitReturn Fee"
 
-  request(query,(req,res) => {
+  request.get(query,(req,res) => {
     console.log("Paid fee to BitReturn!")
     // res.send(200, " Fee Paid!")
     return;

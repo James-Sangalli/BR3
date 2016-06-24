@@ -30,6 +30,10 @@ module.exports = {
 
   findUnpaid: () => {
     return knex('payments').select().where("paid",false);
+  },
+
+  paid: (tx) => {
+    return knex('payments').update("paid",true).where("tx",tx);
   }
 
 }
