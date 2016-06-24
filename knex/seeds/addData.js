@@ -14,7 +14,8 @@ exports.seed = function(knex, Promise) {
    knex("payments").insert({value:"0.00227175",
      address:"1Xb8knHbuWkSyaV6E1bnrPMUdQeDnYNbG",
      charity:"38ccq12hPFoiSksxUdr6SQ5VosyjY7s9AU",
-     tx:"7b4b29e7639c4939635cd741b906fe30a3fa988f06a5a41c1c2a624dda32ebe9"
+     tx:"7b4b29e7639c4939635cd741b906fe30a3fa988f06a5a41c1c2a624dda32ebe9",
+     paid:false
    }),
 
     knex("approvedCharitiesTable").del(),

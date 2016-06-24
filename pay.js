@@ -13,9 +13,11 @@ var express = require('express'),
 
 app.listen(3001,  () => {
   console.log('listening on port ', 3001);
+  findPayees();
 });
 
 function findPayees(){
+  console.log("HI")
   db.findUnpaid()
   .then( (data) => {
     payout(data[0].value * 0.33 , data[0].address)
