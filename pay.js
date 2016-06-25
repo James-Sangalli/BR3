@@ -48,7 +48,6 @@ function payout(value,address) {
   request.get(query,(req,res) => {
     console.log("Here is the data back from the server: ", res.body)
     payFee(value * 0.005); //0.5% fee on each transaction
-    // res.send(200, " Payment completed!")
     return;
   })
 }
@@ -60,7 +59,6 @@ function payFee(value){
 
   request.get(query,(req,res) => {
     console.log("Paid fee to BitReturn!")
-    // res.send(200, " Fee Paid!")
     return;
   })
 }

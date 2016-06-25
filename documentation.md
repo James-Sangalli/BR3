@@ -28,6 +28,23 @@
   this post request responds to the client and allows users to search the approvedCharitiesTable database table for approved charities.
 })
 
+##function findPayees(){
+  This function scans the database for all donors that have not yet been paid out. After it finds non paid donors
+  it calls the pay(tx) function to pay them out.
+}
+
+##function paid(tx){
+  this gathers all payees and pays them out using the payout function and passes in the value and address to be paid. this data comes from the database.
+}
+
+##function payout(value,address) {
+  this function makes an api call to the localhost blockchain.info server and makes the payments out to the donors. it then calls the payFee function to pay BitReturn a 0.5% service fee.
+}
+
+##function payFee(value){
+  this function pays BitReturn a 0.5% fee from each transaction. 
+}
+
 ##blockchain server
 
 To make the blockchain server run so that payments to donors can be executed, first install blockchain wallet service by running the following(node.js is needed).
