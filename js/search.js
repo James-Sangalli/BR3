@@ -8,7 +8,7 @@ $(function() {
     var searchTerm = $("#searchBox").val().toString();
 
     request
-      .post("http://localhost:3000/search/"+searchTerm) 
+      .post("http://localhost:8000/search/"+searchTerm)
       .send(searchTerm)
       .end(function(err,res){    // get a response back about the result
         if (err) throw err

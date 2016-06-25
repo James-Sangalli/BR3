@@ -1,6 +1,7 @@
 var express = require('express'),
     app = express(),
     config = require('./knex/knexfile.js'),
+    env = process.env.NODE_ENV || 'development',
     knex = require('knex')(config[env]),
     bodyParser = require('body-parser'),
     db = require("./knex/db");
