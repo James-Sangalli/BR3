@@ -1,10 +1,11 @@
 {
   "name": "bitreturn(BR3)",
   "version": "3.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "knex-build": "knex migrate:rollback && knex migrate:latest && knex seed:run",
     "server": "nodemon server.js",
+    "search": "nodemon searchServer.js",
     "build": "browserify js/search.js > js/searchBundle.js",
     "pay": "nodemon pay.js",
     "test": "node ./Tests/test"
