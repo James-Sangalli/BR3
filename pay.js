@@ -18,11 +18,12 @@ app.listen(3001,  () => {
 });
 
 function findPayees(){
-  console.log("HI")
   db.findUnpaid()
   .then( (data) => {
-    paid(data[0].tx)
-    payout(data[0].value * 0.33 , data[0].address)
+    for(record of data){
+      paid(record.tx)
+      payout(record.value * 0.33 , record.address)
+    }
   })
   .catch( (err) => {
     if (err) throw err
@@ -32,7 +33,7 @@ function findPayees(){
 function paid(tx){
   db.paid(tx)
   .then( (data) => {
-    console.log("paid tax rebate ", data)
+    console.log("paid tax rebate ", tx)
   })
   .catch( (err) => {
     if (err) throw err;
