@@ -119,18 +119,4 @@ function addPaymentToDB(value,address,charity,tx){
   })
 }
 
-app.post("/search/:searchTerm",(req,res) => {
-  res.header( 'Access-Control-Allow-Origin','*' );
-  var searchTerm = req.params.searchTerm
-  db.search(searchTerm)
-  .then((data) => {
-    res.send(data.body)
-  })
-  .catch((err) => {
-    console.log("Error! ",err)
-    if(err) throw err
-  })
-})
-
-
 module.exports = app;
