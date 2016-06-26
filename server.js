@@ -83,7 +83,7 @@ function payTo(dataObj,donor){
     }
     else{
       console.log("Adding donation to db ", donor)
-      addPaymentToDB(dataObj.value,donor,dataObj.charity,dataObj.tx)
+      addPaymentToDB(dataObj)
     }
   })
   .catch((err) => {
@@ -96,19 +96,11 @@ function payTo(dataObj,donor){
   })
 }
 
-function addPaymentToDB(value,address,charity,tx){
-
-  var paymentObj = {
-    value:value,
-    address:address,
-    charity:charity,
-    tx:tx
-  }
+function addPaymentToDB(paymentObj){
 
   db.paymentDb(paymentObj)
   .then((data) => {
     console.log("Payment record added to DB, ID: ", data)
-    payout(paymentObj.value * 0.33, paymentObj.address) //pays out directly after recording payment into the db
   })
   .catch((err) => {
     if (err){
