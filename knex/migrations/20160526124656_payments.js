@@ -7,6 +7,8 @@ exports.up = function(knex, Promise) {
     table.string('charity')
     table.string("tx").unique()
     table.boolean("paid").defaultTo(false)
+    table.string("unixDatePaid")
+    table.string("datePaid")
   })
 };
 

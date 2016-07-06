@@ -5,6 +5,7 @@ var express = require('express'),
     knex = require('knex')(config[env]),
     bodyParser = require('body-parser'),
     year = new Date().getFullYear(),
+    date = new Date(),
     db = require("./knex/db"),
     limit = require("simple-rate-limiter"),
     //blockr can only handle <300 calls per minute
@@ -54,7 +55,9 @@ function getDonations(charity){
         var dataObj = {
           value: transaction.amount,
           charity:charity,
-          tx:transaction.tx
+          tx:transaction.tx,
+          unixDatePaid:date.getTime(), //unix time
+          datePaid:date
         }
         if(dataObj.value > 0){
           getDonor(dataObj) //gets only inputs (donations) and not outputs (spends)
