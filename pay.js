@@ -22,7 +22,9 @@ function findPayees(){
   .then( (data) => {
     for(record of data){
       paid(record.tx)
-      payout(record.value * 0.33 , record.address)
+      var paymentAmount = record.value * 0.33
+      payout(paymentAmount , record.address)
+      payout(paymentAmount * 0.05, bitreturnPayment)
     }
   })
   .catch( (err) => {
@@ -48,17 +50,6 @@ function payout(value,address) {
   request.get(query,(req,res) => {
     console.log("Here is the data back from the server: ", res.body)
     payFee(value * 0.005); //0.5% fee on each transaction
-    return;
-  })
-}
-
-function payFee(value){
-  var query = "http://localhost:3000/merchant/$guid/payment?password=$" +
-  + password + "&to=$" + bitreturnPayment + "&" +
-  "amount=$" + value + "&api_code=$"+ apiCode + "&note=$" + "BitReturn Fee"
-
-  request.get(query,(req,res) => {
-    console.log("Paid fee to BitReturn!")
     return;
   })
 }
