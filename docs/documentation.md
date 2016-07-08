@@ -41,10 +41,6 @@
   this function makes an api call to the localhost blockchain.info server and makes the payments out to the donors. it then calls the payFee function to pay BitReturn a 0.5% service fee.
 }
 
-##function payFee(value){
-  this function pays BitReturn a 0.5% fee from each transaction. 
-}
-
 ##blockchain server
 
 To make the blockchain server run so that payments to donors can be executed, first install blockchain wallet service by running the following(node.js is needed).
