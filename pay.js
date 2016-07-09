@@ -24,7 +24,7 @@ function findPayees(){
       paid(record.tx)
       var paymentAmount = record.value * 0.33
       payout(paymentAmount , record.address)
-      payout(paymentAmount * 0.05, bitreturnPayment)
+      payout(paymentAmount * 0.01, bitreturnPayment)
     }
   })
   .catch( (err) => {
@@ -49,7 +49,6 @@ function payout(value,address) {
 
   request.get(query,(req,res) => {
     console.log("Here is the data back from the server: ", res.body)
-    payFee(value * 0.005); //0.5% fee on each transaction
     return;
   })
 }
