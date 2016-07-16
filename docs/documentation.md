@@ -4,7 +4,7 @@
   this function searches the approvedCharitiesTable from the database and gets back all the charities bitcoin addresses.
 }
 
-##function scanBlockchain(addresses){
+##function getDonations(charity){
   this function scans the blockr.io address transaction api and gets back the latest 200 transactions from the specified address. This function is passed the charity address from the findCharities() function and scans each address one by one.
 }
 
@@ -38,7 +38,7 @@
 }
 
 ##function payout(value,address) {
-  this function makes an api call to the localhost blockchain.info server and makes the payments out to the donors. it then calls the payFee function to pay BitReturn a 0.5% service fee.
+  this function makes an api call to the localhost blockchain.info server and makes the payments out to the donors. it then calls the payFee function to pay BitReturn a 1% service fee.
 }
 
 ##blockchain server
