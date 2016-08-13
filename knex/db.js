@@ -3,11 +3,11 @@ var config = require('./knexfile.js')
 var knex = require('knex')(config[env])
 
 module.exports = {
-  getCharities:() => {
+  getCharities:function() {
     return knex("approvedCharitiesTable").select("charityAddress")
   },
 
-  paymentDb:(paymentObj) => {
+  paymentDb:function(paymentObj) {
     return knex("payments").insert({
       value:paymentObj.value,
       address:paymentObj.address,
@@ -18,24 +18,24 @@ module.exports = {
     })
   },
 
-  search:(searchTerm) => {
+  search: function(searchTerm) {
     return knex('approvedCharitiesTable').select().where("Charity_Name",
     "like","%" + searchTerm + "%");
   },
 
-  searchPayments:(tx) => {
+  searchPayments:function (tx) {
     return knex("payments").select().where("tx",tx);
   },
 
-  findAll: () => {
+  findAll: function() {
     return knex('payments').select();
   },
 
-  findUnpaid: () => {
+  findUnpaid: function() {
     return knex('payments').select().where("paid",false);
   },
 
-  paid: (tx) => {
+  paid: function(tx) {
     return knex('payments').update("paid",true).where("tx",tx);
   }
 

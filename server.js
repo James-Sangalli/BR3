@@ -14,22 +14,22 @@ var express = require('express'),
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.listen(8080,  () => {
+app.listen(8080, function () {
   console.log('listening on port ', 8080);
 });
 
 findCharities();
 
-request("https://blockchain.info/ticker",(err,data) => {
+request("https://blockchain.info/ticker",function (err,data) {
   console.log("bitcoin price: $USD", data.body.USD.buy)
 })
 
 function findCharities(){
   db.getCharities()
-  .then((data) => {
+  .then(function(data) {
     getCharity(data)
   })
-  .catch((err) => {
+  .catch(function (err) {
     if (err){
       console.log("Error ", err)
       throw err
@@ -46,7 +46,7 @@ function getCharity (addresses) {
 
 function getDonations(charity){
   var query = "http://btc.blockr.io/api/v1/address/txs/" + charity
-  request(query, (req,res) => {
+  request(query, function (req,res) {
     var length = res.body.data.txs.length
     for(i=0;i<length;i++){
       var transaction = res.body.data.txs[i]
@@ -69,7 +69,7 @@ function getDonations(charity){
 
 function getDonor(dataObj){
   var query = "http://btc.blockr.io/api/v1/tx/info/"+dataObj.tx;
-  request(query,(err,data) => {
+  request(query, function (err,data) {
     var donor = data.body.data.vins[0].address
     payTo(dataObj,donor)
   })
@@ -79,7 +79,7 @@ function payTo(dataObj,donor){
   console.log("donation found!", dataObj.tx)
   //values that are spent are negative, we only want to take in donations or positive values
   db.searchPayments(dataObj.tx)
-  .then((data) => {
+  .then(function (data) {
     if(data[0]){
       console.log("donation already processed")
       /*do nothing as donation rebate has already been handled*/
@@ -89,7 +89,7 @@ function payTo(dataObj,donor){
       addPaymentToDB(dataObj)
     }
   })
-  .catch((err) => {
+  .catch(function (err) {
     if (err.errno == 19) {
       console.log("Payment already completed")
     }
@@ -102,10 +102,10 @@ function payTo(dataObj,donor){
 function addPaymentToDB(paymentObj){
 
   db.paymentDb(paymentObj)
-  .then((data) => {
+  .then(function(data)  {
     console.log("Payment record added to DB, ID: ", data)
   })
-  .catch((err) => {
+  .catch(function(err)  {
     if (err){
       console.log("Error ", err)
       throw err
