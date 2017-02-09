@@ -46,7 +46,7 @@ BitReturn 3.0, this version of BitReturn is different to the other 2 versions. I
 
 ##blockchain server
 
-To make the blockchain server run so that payments to donors can be executed, first install blockchain wallet service by running the following(node.js is needed).
+To make the blockchain server run so that payments to donors can be executed, first install blockchain wallet service by running the following(node.js is needed). Please note that this is not needed in the node branch as it will use your Node instead of blockchain.info's.
 
 ###$ npm install -g blockchain-wallet-service
 
