@@ -1,6 +1,8 @@
 # BR3
 BitReturn 3.0, this version of BitReturn is different to the other 2 versions. It is entirely automated and scans the blockchain paying out tax rebates directly without the need for individual application. Visit the docs to see the documentation.
 
+##Note: the master branch of this repo uses the blockchain.info api to make payments, the node branch contains functions which use your own node rather than a third parties. This is more secure but also more cumbersome for users who do not have a node. 
+
 #DOCUMENTATION
 
 ##function findCharities(){
