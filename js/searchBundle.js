@@ -1,12 +1,12 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var request = require("superagent")
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){let a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);let f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}let l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){let n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}let i=typeof require=="function"&&require;for(let o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+let request = require("superagent")
 
 $(function() {
 
   $("#searchButton").click(function(){
 
     console.log("local api initiated")
-    var searchTerm = $("#searchBox").val().toString();
+    let searchTerm = $("#searchBox").val().toString();
 
     request
       .post("http://localhost:8000/search/"+searchTerm)
@@ -49,7 +49,7 @@ function Emitter(obj) {
  */
 
 function mixin(obj) {
-  for (var key in Emitter.prototype) {
+  for (let key in Emitter.prototype) {
     obj[key] = Emitter.prototype[key];
   }
   return obj;
@@ -116,7 +116,7 @@ Emitter.prototype.removeEventListener = function(event, fn){
   }
 
   // specific event
-  var callbacks = this._callbacks['$' + event];
+  let callbacks = this._callbacks['$' + event];
   if (!callbacks) return this;
 
   // remove all handlers
@@ -126,8 +126,8 @@ Emitter.prototype.removeEventListener = function(event, fn){
   }
 
   // remove specific handler
-  var cb;
-  for (var i = 0; i < callbacks.length; i++) {
+  let cb;
+  for (let i = 0; i < callbacks.length; i++) {
     cb = callbacks[i];
     if (cb === fn || cb.fn === fn) {
       callbacks.splice(i, 1);
@@ -147,12 +147,12 @@ Emitter.prototype.removeEventListener = function(event, fn){
 
 Emitter.prototype.emit = function(event){
   this._callbacks = this._callbacks || {};
-  var args = [].slice.call(arguments, 1)
+  let args = [].slice.call(arguments, 1)
     , callbacks = this._callbacks['$' + event];
 
   if (callbacks) {
     callbacks = callbacks.slice(0);
-    for (var i = 0, len = callbacks.length; i < len; ++i) {
+    for (let i = 0, len = callbacks.length; i < len; ++i) {
       callbacks[i].apply(this, args);
     }
   }
@@ -198,9 +198,9 @@ Emitter.prototype.hasListeners = function(event){
  */
 
 module.exports = function(arr, fn, initial){  
-  var idx = 0;
-  var len = arr.length;
-  var curr = arguments.length == 3
+  let idx = 0;
+  let len = arr.length;
+  let curr = arguments.length == 3
     ? initial
     : arr[idx++];
 
@@ -215,16 +215,16 @@ module.exports = function(arr, fn, initial){
  * Module dependencies.
  */
 
-var Emitter = require('emitter');
-var reduce = require('reduce');
-var requestBase = require('./request-base');
-var isObject = require('./is-object');
+let Emitter = require('emitter');
+let reduce = require('reduce');
+let requestBase = require('./request-base');
+let isObject = require('./is-object');
 
 /**
  * Root reference for iframes.
  */
 
-var root;
+let root;
 if (typeof window !== 'undefined') { // Browser window
   root = window;
 } else if (typeof self !== 'undefined') { // Web Worker
@@ -251,7 +251,7 @@ function noop(){};
  */
 
 function isHost(obj) {
-  var str = {}.toString.call(obj);
+  let str = {}.toString.call(obj);
 
   switch (str) {
     case '[object File]':
@@ -267,7 +267,7 @@ function isHost(obj) {
  * Expose `request`.
  */
 
-var request = module.exports = require('./request').bind(null, Request);
+let request = module.exports = require('./request').bind(null, Request);
 
 /**
  * Determine XHR.
@@ -295,7 +295,7 @@ request.getXHR = function () {
  * @api private
  */
 
-var trim = ''.trim
+let trim = ''.trim
   ? function(s) { return s.trim(); }
   : function(s) { return s.replace(/(^\s*|\s*$)/g, ''); };
 
@@ -309,8 +309,8 @@ var trim = ''.trim
 
 function serialize(obj) {
   if (!isObject(obj)) return obj;
-  var pairs = [];
-  for (var key in obj) {
+  let pairs = [];
+  for (let key in obj) {
     if (null != obj[key]) {
       pushEncodedKeyValuePair(pairs, key, obj[key]);
         }
@@ -352,12 +352,12 @@ function pushEncodedKeyValuePair(pairs, key, val) {
   */
 
 function parseString(str) {
-  var obj = {};
-  var pairs = str.split('&');
-  var parts;
-  var pair;
+  let obj = {};
+  let pairs = str.split('&');
+  let parts;
+  let pair;
 
-  for (var i = 0, len = pairs.length; i < len; ++i) {
+  for (let i = 0, len = pairs.length; i < len; ++i) {
     pair = pairs[i];
     parts = pair.split('=');
     obj[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1]);
@@ -426,16 +426,16 @@ request.parse = {
  */
 
 function parseHeader(str) {
-  var lines = str.split(/\r?\n/);
-  var fields = {};
-  var index;
-  var line;
-  var field;
-  var val;
+  let lines = str.split(/\r?\n/);
+  let fields = {};
+  let index;
+  let line;
+  let field;
+  let val;
 
   lines.pop(); // trailing CRLF
 
-  for (var i = 0, len = lines.length; i < len; ++i) {
+  for (let i = 0, len = lines.length; i < len; ++i) {
     line = lines[i];
     index = line.indexOf(':');
     field = line.slice(0, index).toLowerCase();
@@ -480,7 +480,7 @@ function type(str){
 
 function params(str){
   return reduce(str.split(/ *; */), function(obj, str){
-    var parts = str.split(/ *= */)
+    let parts = str.split(/ *= */)
       , key = parts.shift()
       , val = parts.shift();
 
@@ -582,12 +582,12 @@ Response.prototype.get = function(field){
 
 Response.prototype.setHeaderProperties = function(header){
   // content-type
-  var ct = this.header['content-type'] || '';
+  let ct = this.header['content-type'] || '';
   this.type = type(ct);
 
   // params
-  var obj = params(ct);
-  for (var key in obj) this[key] = obj[key];
+  let obj = params(ct);
+  for (let key in obj) this[key] = obj[key];
 };
 
 /**
@@ -602,7 +602,7 @@ Response.prototype.setHeaderProperties = function(header){
  */
 
 Response.prototype.parseBody = function(str){
-  var parse = request.parse[this.type];
+  let parse = request.parse[this.type];
   if (!parse && isJSON(this.type)) {
     parse = request.parse['application/json'];
   }
@@ -638,7 +638,7 @@ Response.prototype.setStatusProperties = function(status){
     status = 204;
   }
 
-  var type = status / 100 | 0;
+  let type = status / 100 | 0;
 
   // status / class
   this.status = this.statusCode = status;
@@ -671,12 +671,12 @@ Response.prototype.setStatusProperties = function(status){
  */
 
 Response.prototype.toError = function(){
-  var req = this.req;
-  var method = req.method;
-  var url = req.url;
+  let req = this.req;
+  let method = req.method;
+  let url = req.url;
 
-  var msg = 'cannot ' + method + ' ' + url + ' (' + this.status + ')';
-  var err = new Error(msg);
+  let msg = 'cannot ' + method + ' ' + url + ' (' + this.status + ')';
+  let err = new Error(msg);
   err.status = this.status;
   err.method = method;
   err.url = url;
@@ -699,15 +699,15 @@ request.Response = Response;
  */
 
 function Request(method, url) {
-  var self = this;
+  let self = this;
   this._query = this._query || [];
   this.method = method;
   this.url = url;
   this.header = {}; // preserves header name case
   this._header = {}; // coerces header names to lowercase
   this.on('end', function(){
-    var err = null;
-    var res = null;
+    let err = null;
+    let res = null;
 
     try {
       res = new Response(self);
@@ -732,7 +732,7 @@ function Request(method, url) {
       return self.callback(err, res);
     }
 
-    var new_err = new Error(res.statusText || 'Unsuccessful HTTP response');
+    let new_err = new Error(res.statusText || 'Unsuccessful HTTP response');
     new_err.original = err;
     new_err.response = res;
     new_err.status = res.status;
@@ -746,7 +746,7 @@ function Request(method, url) {
  */
 
 Emitter(Request.prototype);
-for (var key in requestBase) {
+for (let key in requestBase) {
   Request.prototype[key] = requestBase[key];
 }
 
@@ -857,7 +857,7 @@ Request.prototype.auth = function(user, pass, options){
 
   switch (options.type) {
     case 'basic':
-      var str = btoa(user + ':' + pass);
+      let str = btoa(user + ':' + pass);
       this.set('Authorization', 'Basic ' + str);
     break;
 
@@ -959,12 +959,12 @@ Request.prototype._getFormData = function(){
  */
 
 Request.prototype.send = function(data){
-  var obj = isObject(data);
-  var type = this._header['content-type'];
+  let obj = isObject(data);
+  let type = this._header['content-type'];
 
   // merge
   if (obj && isObject(this._data)) {
-    for (var key in data) {
+    for (let key in data) {
       this._data[key] = data[key];
     }
   } else if ('string' == typeof data) {
@@ -1012,7 +1012,7 @@ Response.prototype.serialize = function serialize(fn){
  */
 
 Request.prototype.callback = function(err, res){
-  var fn = this._callback;
+  let fn = this._callback;
   this.clearTimeout();
   fn(err, res);
 };
@@ -1024,7 +1024,7 @@ Request.prototype.callback = function(err, res){
  */
 
 Request.prototype.crossDomainError = function(){
-  var err = new Error('Request has been terminated\nPossible causes: the network is offline, Origin is not allowed by Access-Control-Allow-Origin, the page is being unloaded, etc.');
+  let err = new Error('Request has been terminated\nPossible causes: the network is offline, Origin is not allowed by Access-Control-Allow-Origin, the page is being unloaded, etc.');
   err.crossDomain = true;
 
   err.status = this.status;
@@ -1041,8 +1041,8 @@ Request.prototype.crossDomainError = function(){
  */
 
 Request.prototype.timeoutError = function(){
-  var timeout = this._timeout;
-  var err = new Error('timeout of ' + timeout + 'ms exceeded');
+  let timeout = this._timeout;
+  let err = new Error('timeout of ' + timeout + 'ms exceeded');
   err.timeout = timeout;
   this.callback(err);
 };
@@ -1073,11 +1073,11 @@ Request.prototype.withCredentials = function(){
  */
 
 Request.prototype.end = function(fn){
-  var self = this;
-  var xhr = this.xhr = request.getXHR();
-  var query = this._query.join('&');
-  var timeout = this._timeout;
-  var data = this._formData || this._data;
+  let self = this;
+  let xhr = this.xhr = request.getXHR();
+  let query = this._query.join('&');
+  let timeout = this._timeout;
+  let data = this._formData || this._data;
 
   // store callback
   this._callback = fn || noop;
@@ -1088,7 +1088,7 @@ Request.prototype.end = function(fn){
 
     // In IE9, reads to any property (e.g. status) off of an aborted XHR will
     // result in the error "Could not complete the operation due to error c00c023f"
-    var status;
+    let status;
     try { status = xhr.status } catch(e) { status = 0; }
 
     if (0 == status) {
@@ -1100,7 +1100,7 @@ Request.prototype.end = function(fn){
   };
 
   // progress
-  var handleProgress = function(e){
+  let handleProgress = function(e){
     if (e.total > 0) {
       e.percent = e.loaded / e.total * 100;
     }
@@ -1149,14 +1149,14 @@ Request.prototype.end = function(fn){
   // body
   if ('GET' != this.method && 'HEAD' != this.method && 'string' != typeof data && !isHost(data)) {
     // serialize stuff
-    var contentType = this._header['content-type'];
-    var serialize = this._parser || request.serialize[contentType ? contentType.split(';')[0] : ''];
+    let contentType = this._header['content-type'];
+    let serialize = this._parser || request.serialize[contentType ? contentType.split(';')[0] : ''];
     if (!serialize && isJSON(contentType)) serialize = request.serialize['application/json'];
     if (serialize) data = serialize(data);
   }
 
   // set header fields
-  for (var field in this.header) {
+  for (let field in this.header) {
     if (null == this.header[field]) continue;
     xhr.setRequestHeader(field, this.header[field]);
   }
@@ -1192,7 +1192,7 @@ request.Request = Request;
  */
 
 request.get = function(url, data, fn){
-  var req = request('GET', url);
+  let req = request('GET', url);
   if ('function' == typeof data) fn = data, data = null;
   if (data) req.query(data);
   if (fn) req.end(fn);
@@ -1210,7 +1210,7 @@ request.get = function(url, data, fn){
  */
 
 request.head = function(url, data, fn){
-  var req = request('HEAD', url);
+  let req = request('HEAD', url);
   if ('function' == typeof data) fn = data, data = null;
   if (data) req.send(data);
   if (fn) req.end(fn);
@@ -1227,7 +1227,7 @@ request.head = function(url, data, fn){
  */
 
 function del(url, fn){
-  var req = request('DELETE', url);
+  let req = request('DELETE', url);
   if (fn) req.end(fn);
   return req;
 };
@@ -1246,7 +1246,7 @@ request['delete'] = del;
  */
 
 request.patch = function(url, data, fn){
-  var req = request('PATCH', url);
+  let req = request('PATCH', url);
   if ('function' == typeof data) fn = data, data = null;
   if (data) req.send(data);
   if (fn) req.end(fn);
@@ -1264,7 +1264,7 @@ request.patch = function(url, data, fn){
  */
 
 request.post = function(url, data, fn){
-  var req = request('POST', url);
+  let req = request('POST', url);
   if ('function' == typeof data) fn = data, data = null;
   if (data) req.send(data);
   if (fn) req.end(fn);
@@ -1282,7 +1282,7 @@ request.post = function(url, data, fn){
  */
 
 request.put = function(url, data, fn){
-  var req = request('PUT', url);
+  let req = request('PUT', url);
   if ('function' == typeof data) fn = data, data = null;
   if (data) req.send(data);
   if (fn) req.end(fn);
@@ -1308,7 +1308,7 @@ module.exports = isObject;
 /**
  * Module of mixed-in functions shared between node and client code
  */
-var isObject = require('./is-object');
+let isObject = require('./is-object');
 
 /**
  * Clear previous timeout.
@@ -1424,7 +1424,7 @@ exports.getHeader = exports.get;
 
 exports.set = function(field, val){
   if (isObject(field)) {
-    for (var key in field) {
+    for (let key in field) {
       this.set(key, field[key]);
     }
     return this;

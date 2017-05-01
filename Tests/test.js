@@ -1,7 +1,7 @@
-var test = require("tape")
-var app = require("../server")
-var request = require("superagent")
-var db = require("../knex/db")
+let test = require("tape")
+let app = require("../server")
+let request = require("superagent")
+let db = require("../knex/db")
 
 test('tests db functions', function(t) {
   db.getCharities()
@@ -11,7 +11,7 @@ test('tests db functions', function(t) {
   })
 });
 
-// var charities = {
+// let charities = {
 //   first:"Sean's OutPost"
 // }
 //

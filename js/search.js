@@ -1,11 +1,11 @@
-var request = require("superagent")
+let request = require("superagent")
 
 $(function() {
 
   $("#searchButton").click(function(){
 
     console.log("local api initiated")
-    var searchTerm = $("#searchBox").val().toString();
+    let searchTerm = $("#searchBox").val().toString();
 
     request
       .post("http://localhost:8000/search/"+searchTerm)

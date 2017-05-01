@@ -1,4 +1,4 @@
-var express = require('express'),
+let express = require('express'),
     app = express(),
     config = require('./knex/knexfile.js'),
     env = process.env.NODE_ENV || 'development',
@@ -15,7 +15,7 @@ app.listen(8000,  () => {
 
 app.post("/search/:searchTerm",(req,res) => {
   res.header( 'Access-Control-Allow-Origin','*' );
-  var searchTerm = req.params.searchTerm
+  let searchTerm = req.params.searchTerm
   db.search(searchTerm)
   .then((data) => {
     res.send(data.body)

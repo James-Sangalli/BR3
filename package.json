@@ -27,6 +27,7 @@
   "dependencies": {
     "api-client-limiter": "^0.1.0",
     "bitcoinjs-lib": "^2.2.0",
+    "bitcore-lib": "^0.14.0",
     "body-parser": "^1.15.1",
     "browserify": "^13.0.0",
     "dotenv": "^2.0.0",
