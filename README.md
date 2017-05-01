@@ -1,9 +1,7 @@
-# BR3
-BitReturn 3.0, this version of BitReturn is different to the other 2 versions. It is entirely automated and scans the blockchain paying out tax rebates directly without the need for individual application. Visit the docs to see the documentation.
+# BitReturn
+Bitreturn is an application which scans the blockchain for donations to approved charities and organisations and pays out rebates directly to the donor. This process is automated.
 
-## Note: the master branch of this repo uses the blockchain.info api to make payments, the node branch contains functions which use your own node rather than a third parties. This is more secure but also more cumbersome for users who do not have a node. 
-
-#DOCUMENTATION
+# DOCUMENTATION
 
 ## function findCharities(){
   this function searches the approvedCharitiesTable from the database and gets back all the charities bitcoin addresses.
@@ -48,9 +46,9 @@ BitReturn 3.0, this version of BitReturn is different to the other 2 versions. I
 
 then run this program to collect donor information:
 
-###npm run server
+### npm run server
 
 and to pay out to donors run:
 
-###npm run pay
+### npm run pay
 
