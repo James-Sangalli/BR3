@@ -1,14 +1,16 @@
 {
-  "name": "bitreturn(BR3)",
+  "name": "BitReturn",
   "version": "3.0.0",
   "main": "server.js",
   "scripts": {
     "knex-build": "knex migrate:rollback && knex migrate:latest && knex seed:run",
     "server": "nodemon server.js",
     "search": "nodemon searchServer.js",
-    "build": "browserify js/search.js > js/searchBundle.js",
+    "bundle": "browserify js/search.js > js/searchBundle.js",
     "pay": "nodemon pay.js",
-    "test": "node ./Tests/test"
+    "test": "node ./Tests/test",
+    "build": "webpack -d && cp public/index.html dist/index.html && webpack-dev-server --content-base src/ --inline --hot",
+    "build:prod": "webpack -p && cp public/index.html dist/index.html"
   },
   "repository": {
     "type": "git",
@@ -19,11 +21,12 @@
     "JavaScript",
     "Donations"
   ],
+  "license": "MIT",
   "author": "James Sangalli",
   "bugs": {
-    "url": "https://github.com/James-Sangalli/BR3/issues"
+    "url": "https://github.com/James-Sangalli/BitReturn/issues"
   },
-  "homepage": "https://github.com/James-Sangalli/BR3#readme",
+  "homepage": "https://github.com/James-Sangalli/BitReturn#readme",
   "dependencies": {
     "api-client-limiter": "^0.1.0",
     "bitcoinjs-lib": "^2.2.0",
@@ -39,12 +42,21 @@
     "prompt": "^1.0.0",
     "request": "^2.72.0",
     "simple-rate-limiter": "^0.2.3",
-    "superagent": "^1.8.3"
+    "superagent": "^1.8.3",
+    "react": "^15.2.1",
+    "react-dom": "^15.2.1"
   },
   "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.5.0",
+    "babel-preset-stage-2": "^6.11.0",
     "sqlite3": "^3.1.1",
     "tap-spec": "^4.1.1",
     "tape": "^4.5.1",
-    "watchify": "^3.7.0"
+    "watchify": "^3.7.0",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1"
   }
 }
