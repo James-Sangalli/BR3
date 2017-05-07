@@ -44,11 +44,11 @@ Bitreturn is an application which scans the blockchain for donations to approved
   this function makes an api call to the localhost blockchain.info server and makes the payments out to the donors. it then calls the payFee function to pay BitReturn a 1% service fee.
 }
 
-then run this program to collect donor information:
+### then do this to collect donor information:
 
 #### npm run server
 
-and to pay out to donors run:
+### then do this to pay out the donors:
 
 #### npm run pay
 
