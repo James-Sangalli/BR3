@@ -20,7 +20,7 @@ module.exports = {
 
   search: function(searchTerm) {
     return knex('approvedCharitiesTable').select().where("Charity_Name",
-    "like","%" + searchTerm + "%");
+    "LIKE","%" + searchTerm + "%");
   },
 
   searchPayments:function (tx) {

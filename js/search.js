@@ -8,12 +8,25 @@ $(function() {
     let searchTerm = $("#searchBox").val().toString();
 
     request
-      .post("http://localhost:8000/search/"+searchTerm)
+      .get("http://localhost:3000/search/" + searchTerm)
       .send(searchTerm)
       .end(function(err,res){    // get a response back about the result
         if (err) throw err;
         console.log(res.text); //response data from server with sql data
-        $("#results").val(res.text); //renders to search page
+        if(res.text == null || res.text == "")
+        {
+            alert("No Results found");
+        }
+        else
+        {
+            for(result of res.text)
+            {
+                $("#searchResults").addClass("col-md-4").append(
+                    "<h2>" + result.Charity_Name + "</h2>").append("<p>" + result.charityAddress + "</p>");
+            }
+
+        }
+
       })
     });
 

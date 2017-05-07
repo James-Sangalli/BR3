@@ -13,7 +13,7 @@ app.listen(3000,  () => {
   console.log('listening on port ', 3000);
 });
 
-app.post("/search/:searchTerm",(req,res) =>
+app.get("/search/:searchTerm",(req,res) =>
 {
   res.header( 'Access-Control-Allow-Origin','*' );
 
