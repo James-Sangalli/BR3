@@ -46,9 +46,13 @@ Bitreturn is an application which scans the blockchain for donations to approved
 
 then run this program to collect donor information:
 
-### npm run server
+#### npm run server
 
 and to pay out to donors run:
 
-### npm run pay
+#### npm run pay
+
+### To run the search server:
+
+#### npm run search
 

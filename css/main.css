@@ -12,23 +12,19 @@ article{
   text-align: center;
 }
 
-#bitpayButton{
-  /*max-width: 50px;
-  max-height: 70px;*/
-}
 
 h4{
-  color: yellow;
+  color: white;
 }
 
 h5{
   text-align: center;
   font-style: italic;
-  color: yellow;
+  color: white;
 }
 
 h1{
-  color: yellow;
+  color: white;
 }
 
 
@@ -69,7 +65,8 @@ html{
   margin-top: 5%;
 }
 
-.container{
+.container
+{
   width:90%;
   max-width: 1500px;
   display:flex ;
@@ -120,7 +117,7 @@ li a {
 }
 
 body input {
-  width:600px;
+  width:100%;
 }
 
 li a:hover {
@@ -141,15 +138,13 @@ li a:hover {
 /*media queries*/
 @media (max-width: 750px) {
   html,body, .mainContainer{
-    background: black;
+
   }
-  #resultsForm{
-    max-width: 90%;
-    min-width:90%;
-  }
-  #donation-form{
-    max-width: 90%;
-    min-width:90%;
-    margin-left: 0px;
-  }
+
+    body input
+    {
+        max-width: 90%;
+    }
+
+
 }
