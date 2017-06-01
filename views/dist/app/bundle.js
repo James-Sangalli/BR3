@@ -81,17 +81,31 @@
 	    _createClass(App, [{
 	        key: 'render',
 	        value: function render() {
-	            var searchData = {};
+	            var searchData = {
+	                //get db data here
+	                name: "Sean's Outpost",
+	                bitcoinAddress: "1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd"
+	            };
+	
 	            return _react2.default.createElement(
 	                'div',
-	                null,
+	                { className: 'container' },
 	                _react2.default.createElement(
 	                    'div',
-	                    { className: 'jumbotron' },
+	                    { className: 'row' },
 	                    _react2.default.createElement(
-	                        'h1',
-	                        null,
-	                        'BitReturn'
+	                        'div',
+	                        { className: 'col-xs-10 col-xs-offset-1' },
+	                        _react2.default.createElement(_Header.Header, null)
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'row' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'col-xs-10 col-xs-offset-1' },
+	                        _react2.default.createElement(_Home.Home, { searchData: searchData })
 	                    )
 	                )
 	            );
@@ -22451,27 +22465,40 @@
 	        key: "render",
 	        value: function render() {
 	            return _react2.default.createElement(
-	                "nav",
-	                { className: "navbar navbar-default" },
+	                "div",
+	                null,
 	                _react2.default.createElement(
-	                    "div",
-	                    { className: "container" },
+	                    "nav",
+	                    { className: "navbar navbar-default" },
 	                    _react2.default.createElement(
 	                        "div",
-	                        { className: "navbar-header" },
+	                        { className: "container" },
 	                        _react2.default.createElement(
-	                            "ul",
-	                            { className: "nav navbar-nav" },
+	                            "div",
+	                            { className: "navbar-header" },
 	                            _react2.default.createElement(
-	                                "li",
-	                                null,
+	                                "ul",
+	                                { className: "nav navbar-nav" },
 	                                _react2.default.createElement(
-	                                    "a",
-	                                    { href: "" },
-	                                    "Home"
+	                                    "li",
+	                                    null,
+	                                    _react2.default.createElement(
+	                                        "a",
+	                                        { href: "" },
+	                                        "Home"
+	                                    )
 	                                )
 	                            )
 	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: "jumbotron" },
+	                    _react2.default.createElement(
+	                        "h1",
+	                        null,
+	                        "BitReturn"
 	                    )
 	                )
 	            );

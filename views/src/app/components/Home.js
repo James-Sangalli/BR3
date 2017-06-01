@@ -25,7 +25,7 @@ export class Home extends React.Component
                     <button type="search" id="searchButton" className="btn-success">Search</button>
                     <div id="searchResults">
                         <li>
-                            {this.props.searchData.map(searchEntry,i, () => { document.createElement("entry" + i).value(searchEntry)})}
+                            {/*{this.props.searchData.map(searchEntry,i, () => { document.createElement("entry" + i).value(searchEntry)})}*/}
                         </li>
                     </div>
                 </div>
@@ -35,7 +35,7 @@ export class Home extends React.Component
 }
 
 //Good practise to prevent type problems as JS has dynamic variables
-Home.propTypes = {
-    searchData:Object
-};
+// Home.propTypes = {
+//     searchData:Object
+// };
 
