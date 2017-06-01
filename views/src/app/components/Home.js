@@ -20,6 +20,7 @@ export class Home extends React.Component
                             <input id="searchBox" type ="text" name="searchBox" className="form-control"/>
                         </div>
                     </div>
+                </div>
                 <div className="twelve columns">
                     <button type="search" id="searchButton" className="btn-success">Search</button>
                     <div id="searchResults">
@@ -34,4 +35,7 @@ export class Home extends React.Component
 }
 
 //Good practise to prevent type problems as JS has dynamic variables
-Home.propTypes = {}
+Home.propTypes = {
+    searchData:Object
+};
+
