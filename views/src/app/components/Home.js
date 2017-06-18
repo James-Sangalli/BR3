@@ -1,7 +1,32 @@
 import React from "react";
+import db from "../../../../knex/db";
 
 export class Home extends React.Component
 {
+    constructor()
+    {
+        super();
+        this.state = {}
+    }
+
+    static getResultsFromDB(searchTerm)
+    {
+        let searchResults = db.search(searchTerm);
+
+        if(searchResults != null)
+        {
+            for(index in searchResults)
+            {
+                document.getElementById("results").appendChild("result" + index)
+                    .value(searchResults[index]);
+            }
+        }
+
+        this.setState = searchResults;
+
+        return searchResults;
+    }
+
     render()
     {
         return(
@@ -22,10 +47,10 @@ export class Home extends React.Component
                     </div>
                 </div>
                 <div className="twelve columns">
-                    <button type="search" id="searchButton" className="btn-success">Search</button>
+                    <button type="search" id="searchButton" className="btn-success" onClick={this.getResultsFromDB(document.getElementById("searchBox").valueOf())}>Search</button>
                     <div id="searchResults">
-                        <li>
-                            {/*{this.props.searchData.map(searchEntry,i, () => { document.createElement("entry" + i).value(searchEntry)})}*/}
+                        <li id="results">
+                            {this.state.Charity_Name}
                         </li>
                     </div>
                 </div>

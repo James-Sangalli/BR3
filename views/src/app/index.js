@@ -7,6 +7,7 @@ import { Home } from "./components/Home";
 class App extends React.Component {
 
     render() {
+        //TODO place in Home
         let searchData = {
             //get db data here
             name:"Sean's Outpost",

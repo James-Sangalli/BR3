@@ -1,39 +1,4 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-let request = require("superagent");
-
-$(function() {
-
-  $("#searchButton").click(function(){
-
-    console.log("local api initiated");
-    let searchTerm = $("#searchBox").val().toString();
-
-    request
-      .get("http://localhost:3000/search/" + searchTerm)
-      .send(searchTerm)
-      .end(function(err,res){    // get a response back about the result
-        if (err) throw err;
-        console.log(res.text); //response data from server with sql data
-        if(res.text == null || res.text == "")
-        {
-            alert("No Results found");
-        }
-        else
-        {
-            for(result of res.text)
-            {
-                $("#searchResults").addClass("col-md-4").append(
-                    "<h2>" + result.Charity_Name + "</h2>").append("<p>" + result.charityAddress + "</p>");
-            }
-
-        }
-
-      })
-    });
-
-});
-
-},{"superagent":4}],2:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -198,7 +163,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],3:[function(require,module,exports){
+},{}],2:[function(require,module,exports){
 
 /**
  * Reduce `arr` with `fn`.
@@ -223,7 +188,7 @@ module.exports = function(arr, fn, initial){
   
   return curr;
 };
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -1302,7 +1267,7 @@ request.put = function(url, data, fn){
   return req;
 };
 
-},{"./is-object":5,"./request":7,"./request-base":6,"emitter":2,"reduce":3}],5:[function(require,module,exports){
+},{"./is-object":4,"./request":6,"./request-base":5,"emitter":1,"reduce":2}],4:[function(require,module,exports){
 /**
  * Check if `obj` is an object.
  *
@@ -1317,7 +1282,7 @@ function isObject(obj) {
 
 module.exports = isObject;
 
-},{}],6:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 /**
  * Module of mixed-in functions shared between node and client code
  */
@@ -1485,7 +1450,7 @@ exports.field = function(name, val) {
   return this;
 };
 
-},{"./is-object":5}],7:[function(require,module,exports){
+},{"./is-object":4}],6:[function(require,module,exports){
 // The node and browser modules expose versions of this with the
 // appropriate constructor function bound as first argument
 /**
@@ -1519,4 +1484,39 @@ function request(RequestConstructor, method, url) {
 
 module.exports = request;
 
-},{}]},{},[1]);
+},{}],7:[function(require,module,exports){
+let request = require("superagent");
+
+$(function() {
+
+  $("#searchButton").click(function(){
+
+    console.log("local api initiated");
+    let searchTerm = $("#searchBox").val().toString();
+
+    request
+      .get("http://localhost:3000/search/" + searchTerm)
+      .send(searchTerm)
+      .end(function(err,res){    // get a response back about the result
+        if (err) throw err;
+        console.log(res.text); //response data from server with sql data
+        if(res.text == null || res.text == "")
+        {
+            alert("No Results found");
+        }
+        else
+        {
+            for(result of res.text)
+            {
+                $("#searchResults").addClass("col-md-4").append(
+                    "<h2>" + result.Charity_Name + "</h2>").append("<p>" + result.charityAddress + "</p>");
+            }
+
+        }
+
+      })
+    });
+
+});
+
+},{"superagent":3}]},{},[7]);

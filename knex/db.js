@@ -1,6 +1,6 @@
-let env = process.env.NODE_ENV || 'development'
-let config = require('./knexfile.js')
-let knex = require('knex')(config[env])
+let env = process.env.NODE_ENV || 'development';
+let config = require('./knexfile.js');
+let knex = require('knex')(config[env]);
 
 module.exports = {
   getCharities:function() {
@@ -39,4 +39,4 @@ module.exports = {
     return knex('payments').update("paid",true).where("tx",tx);
   }
 
-}
+};
