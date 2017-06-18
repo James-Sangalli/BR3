@@ -1,5 +1,6 @@
 import React from "react";
 import db from "../../../../knex/db";
+import request from "request";
 
 export class Home extends React.Component
 {
@@ -11,20 +12,25 @@ export class Home extends React.Component
 
     static getResultsFromDB(searchTerm)
     {
-        let searchResults = db.search(searchTerm);
-
-        if(searchResults != null)
+        request.get("/search/" + searchTerm, (err,data) =>
         {
-            for(index in searchResults)
-            {
-                document.getElementById("results").appendChild("result" + index)
-                    .value(searchResults[index]);
-            }
-        }
+            this.setState = data.body;
+        });
+        
+        {/*let searchResults = db.search(searchTerm);*/}
 
-        this.setState = searchResults;
-
-        return searchResults;
+        // if(searchResults != null)
+        // {
+        //     for(index in searchResults)
+        //     {
+        //         document.getElementById("results").appendChild("result" + index)
+        //             .value(searchResults[index]);
+        //     }
+        // }
+        //
+        // this.setState = searchResults;
+        //
+        // return searchResults;
     }
 
     render()
